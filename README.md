@@ -28,4 +28,6 @@ yarn add antd
 yarn add @ant-design/icons
 yarn add @ant-design/pro-table
 yarn add @rescripts/cli -D
+yarn add ahooks
+yarn add umi-request
 ```
