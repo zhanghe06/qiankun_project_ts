@@ -2,8 +2,6 @@ import './public-path';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-// import App from './App';
-// import Demo from './Demo';
 import Layout from './components/Layout';
 import reportWebVitals from './reportWebVitals';
 

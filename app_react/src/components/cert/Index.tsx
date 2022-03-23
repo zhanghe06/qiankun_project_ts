@@ -1,10 +1,7 @@
 import React, { useRef } from 'react';
-import { PlusOutlined, EllipsisOutlined } from '@ant-design/icons';
-import { Button, Tag, Space, Menu, Dropdown } from 'antd';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable, { TableDropdown } from '@ant-design/pro-table';
-import request from 'umi-request';
-// import { useRequest } from 'ahooks';
+import CertService from '../../api/cert'
 
 
 type CertItem = {
@@ -124,13 +121,29 @@ export default () => {
             columns={columns}
             actionRef={actionRef}
             cardBordered
-            request={async (params = {}, sort, filter) => {
-                console.log(sort, filter);
-                return request<{
-                    data: CertItem[];
-                }>('http://127.0.0.1:30975/cert', {
-                    params,
+            request={async (
+                // 第一个参数 params 查询表单和 params 参数的结合
+                // 第一个参数中一定会有 pageSize 和  current ，这两个参数是 antd 的规范
+                params = {},
+                sort,
+                filter,
+            ) => {
+                // 这里需要返回一个 Promise,在返回之前你可以进行数据转化
+                // 如果需要转化参数可以在这里进行修改
+                const msg = await CertService.getAll({
+                    ...params,
+                    offset: params.pageSize && params.current ? (params.pageSize * (params.current - 1)) : 0,
+                    limit: params.pageSize,
                 });
+                // const msg = await CertService.getAll({...params});
+                return {
+                    data: msg.data.entries,
+                    // success 请返回 true，
+                    // 不然 table 会停止解析数据，即使有数据
+                    success: true,
+                    // 不传会使用 data 的长度，如果是分页一定要传
+                    total: msg.data.total_count,
+                };
             }}
             columnsState={{
                 persistenceKey: 'pro-table-singe-demos',
