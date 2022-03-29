@@ -5,12 +5,12 @@ import './index.css';
 import Layout from './components/Layout';
 import reportWebVitals from './reportWebVitals';
 
-ReactDOM.render(
-  <React.StrictMode>
-    <Layout />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+// ReactDOM.render(
+//   <React.StrictMode>
+//     <Layout />
+//   </React.StrictMode>,
+//   document.getElementById('root')
+// );
 
 // interface Props {
 //     container?: any;

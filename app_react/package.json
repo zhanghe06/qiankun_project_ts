@@ -50,5 +50,6 @@
   "devDependencies": {
     "@rescripts/cli": "^0.0.16"
   },
-  "proxy": "http://127.0.0.1:30975"
+  "proxy": "http://127.0.0.1:30975",
+  "homepage": "."
 }
