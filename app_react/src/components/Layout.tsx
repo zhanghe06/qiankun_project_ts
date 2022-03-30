@@ -1,6 +1,7 @@
 import {Tabs} from 'antd';
 import Cert from './cert/Index';
 import Strategy from './strategy/Index';
+import Conf from './conf/Index';
 import './Layout.css'
 
 
@@ -20,7 +21,7 @@ export default () => {
                 <Strategy />
             </TabPane>
             <TabPane tab="邮箱配置" key="3">
-                暂未开通
+                <Conf />
             </TabPane>
         </Tabs>
     );

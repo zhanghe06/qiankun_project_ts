@@ -1,11 +1,12 @@
 import { http } from "./request";
 
 interface StrategyInterface {
+    id?: number
     notice_type: number
     trigger_threshold: number
     to_emails: string
     enabled_state: number
-    created_at: string
+    created_at?: string
 }
 
 interface StrategyListInterface {
@@ -22,7 +23,7 @@ class StrategyService {
         return http.get<StrategyInterface>(`/notice_strategy/${id}`);
     }
     create(data: StrategyInterface) {
-        return http.post<StrategyInterface>("/notice_strategy", data);
+        return http.post<any>("/notice_strategy", data);
     }
     update(data: StrategyInterface, id: any) {
         return http.put<any>(`/notice_strategy/${id}`, data);

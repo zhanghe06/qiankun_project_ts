@@ -1,7 +1,8 @@
 import axios from "axios";
 
 export const http = axios.create({
-    baseURL: "http://127.0.0.1:30975/",
+    // baseURL: "http://127.0.0.1:30975/",
+    baseURL: "/",
     headers: {
         "Content-type": "application/json"
     }
@@ -10,7 +11,7 @@ export const http = axios.create({
 // 请求拦截
 http.interceptors.request.use(
     (config) => {
-        const token = localStorage.getItem("token");
+        const token = localStorage.getItem("token") || "123456";
         if (token) {
             config.headers = {
                 "Content-type": "application/json",

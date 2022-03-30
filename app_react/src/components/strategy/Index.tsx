@@ -1,13 +1,14 @@
-import React, { useRef, useState } from 'react';
-import { PlusOutlined } from '@ant-design/icons';
-import { Button, Row, Col, Space, message } from 'antd';
-import type { ProColumns, ActionType } from '@ant-design/pro-table';
+import React, {useRef, useState} from 'react';
+import {PlusOutlined} from '@ant-design/icons';
+import {Button, Row, Col, Space, message} from 'antd';
+import type {ProColumns, ActionType} from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import ProForm, {
     DrawerForm,
     ProFormCheckbox,
     ProFormRadio,
     ProFormText,
+    ProFormDigit,
 } from '@ant-design/pro-form';
 import StrategyService from '../../api/strategy'
 
@@ -34,7 +35,7 @@ const columns: ProColumns<StrategyItem>[] = [
         ellipsis: true,
         valueType: 'select',
         valueEnum: {
-            '': { text: '全部类型', status: 'Default', default: true},
+            '': { text: '全部类型', status: 'Default', default: true },
             0: {
                 text: '邮件',
                 status: 'Default',
@@ -117,52 +118,69 @@ export default () => {
         { label: '邮件', value: 0},
         { label: '短信', value: 1, disabled: true},
     ];
-    type LayoutType = Parameters<typeof ProForm>[0]['layout'];
-    const LAYOUT_TYPE_HORIZONTAL = 'horizontal';
-    const [formLayoutType, setFormLayoutType] = useState<LayoutType>(LAYOUT_TYPE_HORIZONTAL);
 
-    const formItemLayout =
-        formLayoutType === LAYOUT_TYPE_HORIZONTAL
-            ? {
-                labelCol: { span: 4 },
-                wrapperCol: { span: 14 },
-            }
-            : null;
+    const formItemLayout = {
+        labelCol: { span: 4 },
+        wrapperCol: { span: 14 },
+    };
     return (
         <>
-            <DrawerForm
+            <DrawerForm<{
+                id?: number
+                notice_type: number
+                trigger_threshold: number
+                to_emails: string
+                enabled_state: number
+                created_at?: string
+            }>
                 onVisibleChange={setDrawerVisit}
                 title="新建通知策略"
                 visible={drawerVisit}
                 {...formItemLayout}
-                layout={formLayoutType}
+                layout="horizontal"
                 submitter={{
                     render: (props, doms) => {
-                        return formLayoutType === LAYOUT_TYPE_HORIZONTAL ? (
+                        return (
                             <Row>
                                 <Col span={14} offset={4}>
                                     <Space>{doms}</Space>
                                 </Col>
                             </Row>
-                        ) : (
-                            doms
                         );
                     },
                 }}
-                onFinish={async () => {
+                onFinish={async (values) => {
+                    const res = await StrategyService.create(values)
+                    console.log(values)
+                    console.log(res)
                     message.success('提交成功');
                     return true;
                 }}
             >
-                <ProFormCheckbox.Group
+                <ProFormRadio.Group
                     options={optionsNoticeType}
                     width="md"
                     name="notice_type"
                     label="通知类型"
                 />
-                <ProFormText width="sm" name="company" label="通知时间" placeholder="请输入天数" addonBefore="证书到期前提前" addonAfter="天通知" required={true}/>
+                <ProFormDigit
+                    width="sm"
+                    name="trigger_threshold"
+                    label="通知时间"
+                    placeholder="请输入天数"
+                    addonBefore="证书到期前提前"
+                    addonAfter="天通知"
+                    required={true}
+                />
+                <ProFormText
+                    width="sm"
+                    name="to_emails"
+                    label="通知账号"
+                    placeholder="请输入通知账号"
+                    tooltip="输入通知账号，添加后，对方将收到邮件通知"
+                />
                 <ProFormRadio.Group
-                    name="radio"
+                    name="enabled_state"
                     label="是否启用"
                     options={[
                         {
