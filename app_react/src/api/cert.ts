@@ -19,7 +19,7 @@ class CertService {
         // return http.get<CertListInterface>("/cert", {params});
         return http.get<any>("/cert", {params});
     }
-    get(id: string) {
+    get(id: number) {
         return http.get<CertInterface>(`/cert/${id}`);
     }
     create(data: CertInterface) {
@@ -28,7 +28,7 @@ class CertService {
     update(data: CertInterface, id: any) {
         return http.put<any>(`/cert/${id}`, data);
     }
-    delete(id: any) {
+    delete(id: number) {
         return http.delete<any>(`/cert/${id}`);
     }
     deleteAll() {

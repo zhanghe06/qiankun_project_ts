@@ -1,3 +1,14 @@
 @import '~antd/dist/antd.css';
-/*@import '~antd/dist/antd.compact.css';*/
+@import '~antd/dist/antd.variable.css';
+@import '~antd/dist/antd.compact.css';
 @import '@ant-design/pro-table/dist/table.css';
+@import '@ant-design/pro-form/dist/form.css';
+
+
+.ant-table-thead > tr > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
+    width: 0;
+}
+
+.ant-tabs-top > .ant-tabs-nav::before, .ant-tabs-bottom > .ant-tabs-nav::before, .ant-tabs-top > div > .ant-tabs-nav::before, .ant-tabs-bottom > div > .ant-tabs-nav::before {
+    border-bottom: 0;
+}

@@ -119,6 +119,7 @@ export default () => {
                             height: '120vh',
                         }}
                     >
+                        <div id="micro-container" />
                         <Result
                             status="404"
                             style={{

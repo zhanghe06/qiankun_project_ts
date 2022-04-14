@@ -1,128 +1,200 @@
 import React, {useRef, useState} from 'react';
-import {PlusOutlined} from '@ant-design/icons';
-import {Button, Row, Col, Space, message} from 'antd';
+import {DeleteOutlined, ExclamationCircleOutlined, EyeOutlined, FormOutlined, PlusOutlined} from '@ant-design/icons';
+import {Modal, Button, Row, Col, Space, message, Descriptions} from 'antd';
 import type {ProColumns, ActionType} from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import ProForm, {
+import {
     DrawerForm,
     ProFormCheckbox,
     ProFormRadio,
     ProFormText,
     ProFormDigit,
+    ProFormInstance,
 } from '@ant-design/pro-form';
+import moment from 'moment';
+import 'moment/locale/zh-cn'
 import StrategyService from '../../api/strategy'
 
-type StrategyItem = {
-    id: number;
-    notice_type: number;
-    trigger_threshold: number;
-    to_emails: string;
-    enabled_state: number;
-    deleted_state: number;
-    created_at: string;
-    updated_at: string;
-    deleted_at?: string;
-    created_by: string;
-    updated_by: string;
-    deleted_by?: string;
-};
 
-const columns: ProColumns<StrategyItem>[] = [
-    {
-        title: '通知类型',
-        dataIndex: 'notice_type',
-        copyable: true,
-        ellipsis: true,
-        valueType: 'select',
-        valueEnum: {
-            '': { text: '全部类型', status: 'Default', default: true },
-            0: {
-                text: '邮件',
-                status: 'Default',
-            },
-            1: {
-                text: '短信',
-                status: 'Default',
-                disabled: true,
-            },
-        },
-    },
-    {
-        title: '通知时间',
-        dataIndex: 'trigger_threshold',
-        search: false,
-    },
-    {
-        title: '通知账号',
-        dataIndex: 'to_emails',
-        search: false,
-    },
-    {
-        title: '策略状态',
-        dataIndex: 'enabled_state',
-        copyable: true,
-        ellipsis: true,
-        valueType: 'select',
-        valueEnum: {
-            '': { text: '全部状态', status: 'Default' },
-            0: {
-                text: '停用',
-                status: 'Error',
-            },
-            1: {
-                text: '启用',
-                status: 'Success',
-            },
-        },
-    },
-    {
-        title: '创建时间',
-        key: 'showTime',
-        dataIndex: 'created_at',
-        valueType: 'dateTime',
-        sorter: true,
-        hideInSearch: true,
-    },
-    {
-        title: '创建时间',
-        dataIndex: 'created_at',
-        valueType: 'dateRange',
-        hideInTable: true,
-        search: {
-            transform: (value) => {
-                return {
-                    startTime: value[0],
-                    endTime: value[1],
-                };
-            },
-        },
-    },
-    {
-        title: '操作',
-        valueType: 'option',
-        render: (text, record, _, action) => [
-            <a key="editable">编辑</a>,
-            <a key="delete">删除</a>,
-            <a href="" target="_blank" rel="noopener noreferrer" key="view">
-                查看
-            </a>,
-        ],
-    },
-];
+moment.locale('zh-cn');
 
 
 export default () => {
-    const actionRef = useRef<ActionType>();
+    const strategyTableRef = useRef<ActionType>();
+    const formRef = useRef<ProFormInstance>();
     const [drawerVisit, setDrawerVisit] = useState(false);
+
+    const [isStrategyInfoVisible, setIsStrategyInfoVisible] = useState(false);
+    const [strategyId, setStrategyId] = useState<number>(0);
+    const [strategyInfo, setStrategyInfo] = useState<StrategyItem>();
+
+    const showStrategyInfo = (record: StrategyItem) => {
+        setIsStrategyInfoVisible(true);
+        setStrategyInfo(record);
+    };
+
+    const onStrategyFromChange = (visible: boolean) => {
+        if (!visible) {
+            setStrategyId(0);
+            formRef.current?.resetFields();
+        }
+        setDrawerVisit(visible);
+    }
+
+    const editStrategyInfo = (record: StrategyItem) => {
+        setStrategyId(record.id);
+        // console.log(record);
+        // console.log(formRef.current);
+        formRef.current?.setFieldsValue(record);
+        // setTimeout(() => {formRef.current?.setFieldsValue(record)}, 0)
+        setDrawerVisit(true);
+    }
+
+    const delStrategyInfo = (record: StrategyItem) => {
+        if ( record.enabled_state === 1 ) {
+            Modal.confirm({
+                title: '启用中的策略不允许删除！',
+                icon: <ExclamationCircleOutlined />,
+                content: '',
+                okText: '确认',
+                cancelText: '取消',
+            });
+        } else {
+            Modal.confirm({
+                title: '确定删除选中的策略吗？',
+                icon: <ExclamationCircleOutlined />,
+                content: '',
+                okText: '确认',
+                cancelText: '取消',
+                onOk: () => {
+                    console.log(record)
+                    const res = StrategyService.delete(record.id)
+                    console.log(res)
+                    res.then(() => {
+                        message.success('删除成功');
+                    });
+                    res.catch((e) => {
+                        console.log(e)
+                        message.error('删除失败');
+                    });
+                    strategyTableRef.current?.reload();
+                }
+            });
+        }
+    }
+
+    const handleOk = () => {
+        setIsStrategyInfoVisible(false);
+    };
+
+    const handleCancel = () => {
+        setIsStrategyInfoVisible(false);
+    };
+
     const optionsNoticeType = [
         { label: '邮件', value: 0},
         { label: '短信', value: 1, disabled: true},
     ];
 
+    type StrategyItem = {
+        id: number;
+        notice_type: number;
+        trigger_threshold: number;
+        to_emails: string;
+        enabled_state: number;
+        deleted_state: number;
+        created_at: string;
+        updated_at: string;
+        deleted_at?: string;
+        created_by: string;
+        updated_by: string;
+        deleted_by?: string;
+    };
+
+    const strategyColumns: ProColumns<StrategyItem>[] = [
+        {
+            title: '通知类型',
+            dataIndex: 'notice_type',
+            valueType: 'select',
+            valueEnum: {
+                0: {
+                    text: '邮件',
+                },
+                1: {
+                    text: '短信',
+                    disabled: true,
+                },
+            },
+        },
+        {
+            title: '通知时间',
+            dataIndex: 'trigger_threshold',
+            search: false,
+        },
+        {
+            title: '通知账号',
+            dataIndex: 'to_emails',
+            search: false,
+        },
+        {
+            title: '策略状态',
+            dataIndex: 'enabled_state',
+            ellipsis: true,
+            valueType: 'select',
+            valueEnum: {
+                0: {
+                    text: '停用',
+                    status: 'Error',
+                },
+                1: {
+                    text: '启用',
+                    status: 'Success',
+                },
+            },
+        },
+        {
+            title: '创建时间',
+            key: 'showTime',
+            dataIndex: 'created_at',
+            valueType: 'dateTime',
+            sorter: false,
+            hideInSearch: true,
+        },
+        {
+            title: '创建时间',
+            dataIndex: 'created_at',
+            valueType: 'dateRange',
+            hideInTable: true,
+            search: {
+                transform: (value) => {
+                    return {
+                        startTime: value[0],
+                        endTime: value[1],
+                    };
+                },
+            },
+        },
+        {
+            title: '操作',
+            valueType: 'option',
+            render: (text, record, _, action) => [
+                <a onClick={() => showStrategyInfo(record)} key="show">
+                    <EyeOutlined />查看
+                </a>,
+                <a onClick={() => editStrategyInfo(record)} key="edit">
+                    <FormOutlined />编辑
+                </a>,
+                <a onClick={() => delStrategyInfo(record)} key="del">
+                    <DeleteOutlined />删除
+                </a>,
+            ],
+        },
+    ];
     const formItemLayout = {
         labelCol: { span: 4 },
-        wrapperCol: { span: 14 },
+        wrapperCol: { span: 12 },
     };
+
     return (
         <>
             <DrawerForm<{
@@ -133,8 +205,11 @@ export default () => {
                 enabled_state: number
                 created_at?: string
             }>
-                onVisibleChange={setDrawerVisit}
-                title="新建通知策略"
+                name="strategyForm"
+                onVisibleChange={onStrategyFromChange}
+                title={strategyId?"编辑通知策略":"新建通知策略"}
+                formRef={formRef}
+                drawerProps={{forceRender: true}}
                 visible={drawerVisit}
                 {...formItemLayout}
                 layout="horizontal"
@@ -142,7 +217,7 @@ export default () => {
                     render: (props, doms) => {
                         return (
                             <Row>
-                                <Col span={14} offset={4}>
+                                <Col span={12}>
                                     <Space>{doms}</Space>
                                 </Col>
                             </Row>
@@ -150,11 +225,22 @@ export default () => {
                     },
                 }}
                 onFinish={async (values) => {
-                    const res = await StrategyService.create(values)
-                    console.log(values)
-                    console.log(res)
-                    message.success('提交成功');
-                    return true;
+                    if (strategyId) {
+                        const res = await StrategyService.update(values, strategyId)
+                        console.log(values)
+                        console.log(res)
+                        message.success('编辑成功');
+                        strategyTableRef.current?.reload();
+                        return true;
+                    } else {
+                        const res = await StrategyService.create(values)
+                        console.log(values)
+                        console.log(res)
+                        message.success('创建成功');
+                        strategyTableRef.current?.reload();
+                        return true;
+                    }
+
                 }}
             >
                 <ProFormRadio.Group
@@ -195,8 +281,8 @@ export default () => {
                 />
             </DrawerForm>
             <ProTable<StrategyItem>
-                columns={columns}
-                actionRef={actionRef}
+                columns={strategyColumns}
+                actionRef={strategyTableRef}
                 cardBordered
                 request={async (
                     // 第一个参数 params 查询表单和 params 参数的结合
@@ -226,7 +312,7 @@ export default () => {
                     type: 'multiple',
                 }}
                 columnsState={{
-                    persistenceKey: 'pro-table-singe-demos',
+                    persistenceKey: 'pro-table-strategy',
                     persistenceType: 'localStorage',
                 }}
                 rowKey="id"
@@ -259,6 +345,27 @@ export default () => {
                     </Button>,
                 ]}
             />
+            <Modal
+                title="策略详情"
+                visible={isStrategyInfoVisible}
+                onOk={handleOk}
+                onCancel={handleCancel}
+                footer={null}
+            >
+                <Descriptions
+                    title=""
+                    column={1}
+                    labelStyle={{justifyContent: 'flex-start', minWidth: 100}}
+                >
+                    <Descriptions.Item label="通知类型">{strategyInfo?.notice_type === 0 ? "邮件" : "短信"}</Descriptions.Item>
+                    <Descriptions.Item label="策略状态">{strategyInfo?.enabled_state === 0 ? "停用" : "启用"}</Descriptions.Item>
+                    <Descriptions.Item label="通知账号">{strategyInfo?.to_emails}</Descriptions.Item>
+                    <Descriptions.Item label="创建日期">{strategyInfo?.created_at ? moment(strategyInfo?.created_at).format('YYYY-MM-DD HH:mm:ss') : ""}</Descriptions.Item>
+                    <Descriptions.Item label="创建人">{strategyInfo?.created_by}</Descriptions.Item>
+                    <Descriptions.Item label="修改日期">{strategyInfo?.updated_at ? moment(strategyInfo?.updated_at).format('YYYY-MM-DD HH:mm:ss') : ""}</Descriptions.Item>
+                    <Descriptions.Item label="修改人">{strategyInfo?.updated_by}</Descriptions.Item>
+                </Descriptions>
+            </Modal>
         </>
     );
 };

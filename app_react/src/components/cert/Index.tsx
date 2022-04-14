@@ -1,12 +1,18 @@
 import React, { useRef, useState } from 'react';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { Modal, Button, Descriptions } from 'antd';
+import { EyeOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import {Modal, Button, Descriptions, message} from 'antd';
+import moment from 'moment';
+import 'moment/locale/zh-cn'
 import CertService from '../../api/cert'
 
 
+moment.locale('zh-cn');
+
+
 export default () => {
-    const actionRef = useRef<ActionType>();
+    const certTableRef = useRef<ActionType>();
 
     const [isCertInfoVisible, setIsCertInfoVisible] = useState(false);
     const [certInfo, setCertInfo] = useState<CertItem>();
@@ -25,9 +31,36 @@ export default () => {
     };
 
     const delCertInfo = (record: CertItem) => {
-        console.log(record)
-        const res = CertService.delete(record.id)
-        console.log(res)
+        if ( record.enabled_state === 1 ) {
+            Modal.confirm({
+                title: '启用中的证书不允许删除！',
+                icon: <ExclamationCircleOutlined />,
+                content: '',
+                okText: '确认',
+                cancelText: '取消',
+            });
+        } else {
+            Modal.confirm({
+                title: '确定删除选中的证书吗？',
+                icon: <ExclamationCircleOutlined />,
+                content: '',
+                okText: '确认',
+                cancelText: '取消',
+                onOk: () => {
+                    console.log(record)
+                    const res = CertService.delete(record.id)
+                    console.log(res)
+                    res.then(() => {
+                        message.success('删除成功');
+                    });
+                    res.catch((e) => {
+                        console.log(e)
+                        message.error('删除失败');
+                    });
+                    certTableRef.current?.reload();
+                }
+            });
+        }
     }
 
     type CertItem = {
@@ -110,7 +143,6 @@ export default () => {
             dataIndex: 'enabled_state',
             valueType: 'select',
             valueEnum: {
-                '': { text: '全部状态', status: 'Default' },
                 1: {
                     text: '启用',
                     status: 'Success',
@@ -125,12 +157,12 @@ export default () => {
             title: '操作',
             valueType: 'option',
             render: (text, record, _, action) => [
-                <Button type="primary" onClick={() => showCertInfo(record)}>
-                    查看
-                </Button>,
-                <Button type="default" onClick={() => delCertInfo(record)}>
-                    删除
-                </Button>,
+                <a onClick={() => showCertInfo(record)} key="show">
+                    <EyeOutlined />查看
+                </a>,
+                <a onClick={() => delCertInfo(record)} key="del">
+                    <DeleteOutlined />删除
+                </a>,
             ],
         },
     ];
@@ -139,7 +171,7 @@ export default () => {
         <>
             <ProTable<CertItem>
                 columns={columns}
-                actionRef={actionRef}
+                actionRef={certTableRef}
                 cardBordered
                 request={async (
                     // 第一个参数 params 查询表单和 params 参数的结合
@@ -166,7 +198,7 @@ export default () => {
                     };
                 }}
                 columnsState={{
-                    persistenceKey: 'pro-table-singe-demos',
+                    persistenceKey: 'pro-table-cert',
                     persistenceType: 'localStorage',
                 }}
                 rowKey="id"
@@ -199,13 +231,17 @@ export default () => {
                 onCancel={handleCancel}
                 footer={null}
             >
-                <Descriptions title="" column={1}>
-                    <Descriptions.Item label="客户端ID">{certInfo ? certInfo.auth_id : ""}</Descriptions.Item>
-                    <Descriptions.Item label="接口版本">{certInfo ? certInfo.p_version : ""}</Descriptions.Item>
-                    <Descriptions.Item label="内容仓库">{certInfo ? certInfo.cont_rep : ""}</Descriptions.Item>
-                    <Descriptions.Item label="效期开始时间">{certInfo ? certInfo.not_before : ""}</Descriptions.Item>
-                    <Descriptions.Item label="效期结束时间">{certInfo ? certInfo.not_after : ""}</Descriptions.Item>
-                    <Descriptions.Item label="证书内容">{certInfo ? certInfo.cert_content : ""}</Descriptions.Item>
+                <Descriptions
+                    title=""
+                    column={1}
+                    labelStyle={{justifyContent: 'flex-start', minWidth: 100}}
+                >
+                    <Descriptions.Item label="客户端ID">{certInfo?.auth_id}</Descriptions.Item>
+                    <Descriptions.Item label="接口版本">{certInfo?.p_version}</Descriptions.Item>
+                    <Descriptions.Item label="内容仓库">{certInfo?.cont_rep}</Descriptions.Item>
+                    <Descriptions.Item label="效期开始时间">{certInfo?.not_before}</Descriptions.Item>
+                    <Descriptions.Item label="效期结束时间">{certInfo?.not_after}</Descriptions.Item>
+                    <Descriptions.Item label="证书内容">{certInfo?.cert_content}</Descriptions.Item>
                 </Descriptions>
             </Modal>
         </>

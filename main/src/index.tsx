@@ -17,22 +17,30 @@ registerMicroApps([
     {
         name: 'app_react', // app name registered
         entry: '//localhost:3000',
-        container: '#container',
+        container: '#micro-container',
         activeRule: '/app/react',
     },
     {
         name: 'app_vue',
         entry: '//localhost:8080',
-        container: '#container',
+        container: '#micro-container',
         activeRule: '/app/vue',
     },
     // {
     //   name: 'app_angular',
     //   entry: '//localhost:4200',
-    //   container: '#container',
+    //   container: '#micro-container',
     //   activeRule: '/app/angular',
     // },
 ]);
+
+start(
+    {
+        sandbox: {
+            experimentalStyleIsolation: true
+        }
+    }
+);
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

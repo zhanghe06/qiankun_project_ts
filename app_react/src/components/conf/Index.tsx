@@ -13,11 +13,12 @@ export default () => {
     return (
         <ProForm<{
             server_host: string;
-            server_port: string;
+            server_port: number;
             from_email: string;
             from_passwd: string;
             from_name?: string;
         }>
+            name="confForm"
             {...formItemLayout}
             layout="horizontal"
             submitter={{
@@ -46,6 +47,7 @@ export default () => {
                 const msg = await ConfService.get_email();
                 return msg.data;
             }}
+            labelAlign="left"
         >
             <ProFormText
                 width="md"
@@ -53,13 +55,27 @@ export default () => {
                 name="server_host"
                 label="邮箱服务器地址"
                 placeholder="请输入邮箱服务器地址"
+                rules={
+                    [
+                        { required: true, message: '邮箱服务器地址不能为空' },
+                        { max: 30, message: '长度范围3~30个字符' },
+                        { min: 3, message: '长度范围3~30个字符' },
+                    ]
+                }
             />
-            <ProFormText
+            <ProFormDigit
                 width="md"
                 required={true}
                 name="server_port"
                 label="邮箱服务器端口"
                 placeholder="请输入邮箱服务器端口"
+                max={65535}
+                min={1}
+                rules={
+                    [
+                        { required: true, message: '邮箱服务器端口不能为空' },
+                    ]
+                }
             />
             <ProFormText
                 width="md"
@@ -67,14 +83,22 @@ export default () => {
                 name="from_email"
                 label="发件人邮箱地址"
                 placeholder="请输入发件人邮箱地址"
+                rules={
+                    [
+                        { required: true, message: '发件人邮箱地址不能为空' },
+                        { max: 100, message: '长度范围5~100个字符' },
+                        { pattern: /^([A-Za-z0-9_\-.])+@([A-Za-z0-9_\-.])+\.([A-Za-z]{2,4})$/, message: '请输入正确的邮箱格式' },
+                    ]
+                }
             />
-            <ProFormText
+            <ProFormText.Password
                 width="md"
                 required={true}
                 name="from_passwd"
                 label="发件人邮箱客户端授权码"
                 tooltip="注意：不是登录密码"
                 placeholder="请输入发件人邮箱客户端授权码"
+                rules={[{ required: true, message: '邮箱客户端授权码不能为空' }]}
             />
         </ProForm>
     );

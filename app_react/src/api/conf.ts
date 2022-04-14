@@ -2,7 +2,7 @@ import { http } from "./request";
 
 interface ConfInterface {
     server_host: string;
-    server_port: string;
+    server_port: number;
     from_email: string;
     from_passwd: string;
     from_name?: string;

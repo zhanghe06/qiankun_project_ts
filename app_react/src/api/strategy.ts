@@ -19,7 +19,7 @@ class StrategyService {
         // return http.get<StrategyListInterface>("/strategy", {params});
         return http.get<any>("/notice_strategy", {params});
     }
-    get(id: string) {
+    get(id: number) {
         return http.get<StrategyInterface>(`/notice_strategy/${id}`);
     }
     create(data: StrategyInterface) {
@@ -28,7 +28,7 @@ class StrategyService {
     update(data: StrategyInterface, id: any) {
         return http.put<any>(`/notice_strategy/${id}`, data);
     }
-    delete(id: any) {
+    delete(id: number) {
         return http.delete<any>(`/notice_strategy/${id}`);
     }
     deleteAll() {

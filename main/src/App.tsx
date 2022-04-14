@@ -18,6 +18,9 @@ function App() {
         >
           Learn React
         </a>
+        <div id="micro-container">
+          ...
+        </div>
       </header>
     </div>
   );
