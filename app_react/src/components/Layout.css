@@ -19,3 +19,8 @@
 .ant-tabs-top > .ant-tabs-nav::before, .ant-tabs-bottom > .ant-tabs-nav::before, .ant-tabs-top > div > .ant-tabs-nav::before, .ant-tabs-bottom > div > .ant-tabs-nav::before {
     border-bottom: 0;
 }
+
+/*@border-radius-base: 10px;*/
+/*@primary-color: #ff0000; // 全局主色*/
+/*@link-color: #ffff00; // 链接色*/
+/*@font-size-base: 56px; // 主字号*/
