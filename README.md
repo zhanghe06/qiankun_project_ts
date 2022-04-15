@@ -2,6 +2,8 @@
 
 [快速上手](https://qiankun.umijs.org/zh/guide/getting-started)
 
+[常见问题](https://qiankun.umijs.org/zh/faq)
+
 [ProComponents](https://procomponents.ant.design/table/)
 
 ```
@@ -34,6 +36,10 @@ yarn add @types/axios
 yarn add react-router-dom@5
 yarn add @types/react-router-dom@5
 yarn add moment
+yarn add style-loader
+yarn add css-loader
+yarn add less-loader
+yarn add -D @pmmmwh/react-refresh-webpack-plugin react-refresh
 ```
 
 注意：Route 不能设置 exact

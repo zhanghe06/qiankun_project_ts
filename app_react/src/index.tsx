@@ -6,6 +6,11 @@ import "regenerator-runtime/runtime";
 import './index.css';
 import Layout from './components/Layout';
 import reportWebVitals from './reportWebVitals';
+import { ConfigProvider } from 'antd';
+
+import enUS from 'antd/lib/locale/en_US';
+import zhCN from 'antd/lib/locale/zh_CN';
+import zhTW from 'antd/lib/locale/zh_TW';
 
 // ReactDOM.render(
 //   <React.StrictMode>
@@ -20,7 +25,16 @@ import reportWebVitals from './reportWebVitals';
 
 function render(props: any) {
     const { container } = props;
-    ReactDOM.render(<Layout />, container ? container.querySelector('#root') : document.querySelector('#root'));
+    ReactDOM.render(
+        <ConfigProvider
+            locale={enUS}
+            getPopupContainer={(triggerNode) => container ? container.querySelector('#root-app-react') : document.querySelector('#root-app-react')}
+        >
+            <Layout />
+        </ConfigProvider>,
+        // <Layout />,
+        container ? container.querySelector('#root-app-react') : document.querySelector('#root-app-react')
+    );
 }
 
 if (!(window as any).__POWERED_BY_QIANKUN__) {
@@ -48,7 +62,7 @@ export async function mount(props: any) {
  */
 export async function unmount(props: any) {
     const { container } = props;
-    ReactDOM.unmountComponentAtNode(container ? container.querySelector('#root') : document.querySelector('#root'));
+    ReactDOM.unmountComponentAtNode(container ? container.querySelector('#root-app-react') : document.querySelector('#root-app-react'));
 }
 
 /**

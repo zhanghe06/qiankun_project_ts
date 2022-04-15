@@ -58,6 +58,7 @@ export default () => {
                 content: '',
                 okText: '确认',
                 cancelText: '取消',
+                getContainer: document.querySelector('#root-app-react') as any,
             });
         } else {
             Modal.confirm({
@@ -66,16 +67,17 @@ export default () => {
                 content: '',
                 okText: '确认',
                 cancelText: '取消',
+                getContainer: document.querySelector('#root-app-react') as any,
                 onOk: () => {
                     console.log(record)
                     const res = StrategyService.delete(record.id)
                     console.log(res)
                     res.then(() => {
-                        message.success('删除成功');
+                        return message.success('删除成功');
                     });
                     res.catch((e) => {
                         console.log(e)
-                        message.error('删除失败');
+                        return message.error('删除失败');
                     });
                     strategyTableRef.current?.reload();
                 }
@@ -209,7 +211,12 @@ export default () => {
                 onVisibleChange={onStrategyFromChange}
                 title={strategyId?"编辑通知策略":"新建通知策略"}
                 formRef={formRef}
-                drawerProps={{forceRender: true}}
+                drawerProps={
+                    {
+                        forceRender: true,
+                        // getContainer: false, // 全局设置 ConfigProvider getPopupContainer 即可
+                    }
+                }
                 visible={drawerVisit}
                 {...formItemLayout}
                 layout="horizontal"
@@ -320,7 +327,7 @@ export default () => {
                     labelWidth: 'auto',
                 }}
                 form={{
-                    // 由于配置了 transform，提交的参与与定义的不同这里需要转化一下
+                    // 由于配置了 transform，提交的参数与定义的不同这里需要转化一下
                     syncToUrl: (values, type) => {
                         if (type === 'get') {
                             return {
