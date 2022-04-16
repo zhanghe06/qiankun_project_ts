@@ -22,9 +22,9 @@
     "web-vitals": "^2.1.0"
   },
   "scripts": {
-    "start": "PORT=3080 react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "PORT=3080 rescripts start",
+    "build": "rescripts build",
+    "test": "rescripts test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -44,5 +44,13 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@rescripts/cli": "^0.0.16",
+    "@rescripts/rescript-env": "^0.0.14",
+    "@rescripts/rescript-use-babel-config": "^0.0.12",
+    "babel-plugin-import": "^1.13.5",
+    "less": "^4.1.2",
+    "less-loader": "^10.2.0"
   }
 }
