@@ -4,11 +4,7 @@ import ProTable from '@ant-design/pro-table';
 import { EyeOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import {Modal, Button, Descriptions, message} from 'antd';
 import moment from 'moment';
-import 'moment/locale/zh-cn';
 import CertService from '../../api/cert';
-
-
-moment.locale('zh-cn');
 
 
 export default () => {
@@ -242,8 +238,8 @@ export default () => {
                     <Descriptions.Item label="客户端ID">{certInfo?.auth_id}</Descriptions.Item>
                     <Descriptions.Item label="接口版本">{certInfo?.p_version}</Descriptions.Item>
                     <Descriptions.Item label="内容仓库">{certInfo?.cont_rep}</Descriptions.Item>
-                    <Descriptions.Item label="效期开始时间">{certInfo?.not_before}</Descriptions.Item>
-                    <Descriptions.Item label="效期结束时间">{certInfo?.not_after}</Descriptions.Item>
+                    <Descriptions.Item label="效期开始时间">{certInfo?.not_before ? moment(certInfo?.not_before).format("YYYY-MM-DD HH:mm:ss") : ""}</Descriptions.Item>
+                    <Descriptions.Item label="效期结束时间">{certInfo?.not_after ? moment(certInfo?.not_after).format('YYYY-MM-DD HH:mm:ss') : ""}</Descriptions.Item>
                     <Descriptions.Item label="证书内容">{certInfo?.cert_content}</Descriptions.Item>
                 </Descriptions>
             </Modal>

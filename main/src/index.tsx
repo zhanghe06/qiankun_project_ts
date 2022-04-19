@@ -20,7 +20,7 @@ registerMicroApps([
     container: '#micro-container',
     activeRule: '/app/react',
     props: {
-      lang: 'en-us', // zh-cn zh-tw en-us
+      lang: 'zh-tw', // zh-cn zh-tw en-us
       userid: 'admin',
       username: 'admin',
       theme: '#ffff00'

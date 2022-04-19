@@ -19,12 +19,8 @@ import {
     ProFormInstance,
 } from '@ant-design/pro-form';
 import moment from 'moment';
-import 'moment/locale/zh-cn';
 import StrategyService from '../../api/strategy';
 import {Key} from "antd/lib/table/interface";
-
-
-moment.locale('zh-cn');
 
 
 export default () => {

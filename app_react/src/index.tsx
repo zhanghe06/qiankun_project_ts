@@ -8,9 +8,14 @@ import Layout from './components/Layout';
 import reportWebVitals from './reportWebVitals';
 import { ConfigProvider } from 'antd';
 
-import enUS from 'antd/lib/locale/en_US';
 import zhCN from 'antd/lib/locale/zh_CN';
 import zhTW from 'antd/lib/locale/zh_TW';
+import enUS from 'antd/lib/locale/en_US';
+
+import moment from 'moment';
+import 'moment/locale/zh-cn'
+import 'moment/locale/zh-tw'
+import 'moment/locale/en-gb'
 
 // ReactDOM.render(
 //   <React.StrictMode>
@@ -27,13 +32,16 @@ function render(props: any) {
     console.log(props);
     const { container, lang, theme } = props;
 
-    // 语言继承
+    // 语言继承 (时间验证：moment().startOf('hour').fromNow();)
     let locale = zhCN;
+    moment.locale('zh-cn')
     if (lang == 'zh-tw') {
         locale = zhTW;
+        moment.locale('zh-tw')
     }
     if (lang == 'en-us') {
         locale = enUS;
+        moment.locale('en-gb')
     }
 
     // 主题继承
