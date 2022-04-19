@@ -25,7 +25,7 @@ class StrategyService {
     create(data: StrategyInterface) {
         return http.post<any>("/notice_strategy", data);
     }
-    update(data: StrategyInterface, id: any) {
+    update(data: any, id: any) {
         return http.put<any>(`/notice_strategy/${id}`, data);
     }
     delete(id: number) {

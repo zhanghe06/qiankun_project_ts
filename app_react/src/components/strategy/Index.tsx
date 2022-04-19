@@ -1,6 +1,13 @@
 import React, {useRef, useState} from 'react';
-import {DeleteOutlined, ExclamationCircleOutlined, EyeOutlined, FormOutlined, PlusOutlined} from '@ant-design/icons';
-import {Modal, Button, Row, Col, Space, message, Descriptions} from 'antd';
+import {
+    DeleteOutlined,
+    ExclamationCircleOutlined,
+    EyeOutlined,
+    FormOutlined,
+    PlusOutlined,
+    CloseOutlined,
+} from '@ant-design/icons';
+import {Modal, Button, Row, Col, Space, message, Descriptions, Switch} from 'antd';
 import type {ProColumns, ActionType} from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import {
@@ -12,8 +19,9 @@ import {
     ProFormInstance,
 } from '@ant-design/pro-form';
 import moment from 'moment';
-import 'moment/locale/zh-cn'
-import StrategyService from '../../api/strategy'
+import 'moment/locale/zh-cn';
+import StrategyService from '../../api/strategy';
+import {Key} from "antd/lib/table/interface";
 
 
 moment.locale('zh-cn');
@@ -27,6 +35,8 @@ export default () => {
     const [isStrategyInfoVisible, setIsStrategyInfoVisible] = useState(false);
     const [strategyId, setStrategyId] = useState<number>(0);
     const [strategyInfo, setStrategyInfo] = useState<StrategyItem>();
+    const [delButtonDisable, setDelButtonDisable] = useState(true);
+    const [selectRows, setSelectRows] = useState([] as StrategyItem[]);
 
     const showStrategyInfo = (record: StrategyItem) => {
         setIsStrategyInfoVisible(true);
@@ -92,6 +102,12 @@ export default () => {
     const handleCancel = () => {
         setIsStrategyInfoVisible(false);
     };
+
+    const onEnabledStateChange = (record: StrategyItem, checked: boolean) => {
+        const res = StrategyService.update({enabled_state: checked?1:0}, record.id)
+        console.log(res)
+        strategyTableRef.current?.reload();
+    }
 
     const optionsNoticeType = [
         { label: '邮件', value: 0},
@@ -180,14 +196,15 @@ export default () => {
             title: '操作',
             valueType: 'option',
             render: (text, record, _, action) => [
+                <Switch checked={record.enabled_state==1} onChange={(checked: boolean, event: MouseEvent) => onEnabledStateChange(record, checked)} key="switch" size="small" />,
                 <a onClick={() => showStrategyInfo(record)} key="show">
-                    <EyeOutlined />查看
+                    <EyeOutlined />
                 </a>,
                 <a onClick={() => editStrategyInfo(record)} key="edit">
-                    <FormOutlined />编辑
+                    <FormOutlined />
                 </a>,
                 <a onClick={() => delStrategyInfo(record)} key="del">
-                    <DeleteOutlined />删除
+                    <DeleteOutlined />
                 </a>,
             ],
         },
@@ -196,6 +213,58 @@ export default () => {
         labelCol: { span: 4 },
         wrapperCol: { span: 12 },
     };
+
+    const onSelectChange = (selectedRowKeys: Key[], selectedRows: StrategyItem[]) => {
+        setSelectRows(selectedRows)
+        if (selectedRowKeys.length > 0) {
+            setDelButtonDisable(false)
+        } else {
+            setDelButtonDisable(true)
+        }
+    };
+
+    const deleteSelectRows = () => {
+        Modal.confirm({
+            title: '确定删除选中的策略吗？',
+            icon: <ExclamationCircleOutlined />,
+            content: '',
+            okText: '确认',
+            cancelText: '取消',
+            getContainer: document.querySelector('#root-app-react') as any,
+            onOk: () => {
+                const enabledCount = selectRows.reduce(
+                    (pre, item) => pre + item.enabled_state,
+                    0,
+                )
+                if (enabledCount > 0) {
+                    const warnMessages = selectRows.map((item, index) => {
+                        if (item.enabled_state == 1) {
+                            return <Descriptions.Item label="" key={index}>通知策略（通知类型：{item.notice_type==0?'邮件':'短信'};通知时间：提前{item.trigger_threshold}天）启用中。</Descriptions.Item>
+                        }
+                    })
+                    Modal.warning({
+                        title: '以下通知策略无法删除',
+                        icon: <ExclamationCircleOutlined />,
+                        content: <Descriptions title="" column={1}>{warnMessages}</Descriptions>,
+                        okText: '确定',
+                        getContainer: document.querySelector('#root-app-react') as any,
+                    })
+                } else {
+                    selectRows.forEach((item, index) => {
+                        const res = StrategyService.delete(item.id)
+                        res.then(() => {
+                            return message.success({content: '删除成功', key: item.id});
+                        });
+                        res.catch((e) => {
+                            console.log(e)
+                            return message.error({content: '删除失败', key: item.id});
+                        });
+                    })
+                    strategyTableRef.current?.reload();
+                }
+            }
+        });
+    }
 
     return (
         <>
@@ -213,8 +282,10 @@ export default () => {
                 formRef={formRef}
                 drawerProps={
                     {
+                        closable: false, // 取消显示标题左侧关闭按钮
                         forceRender: true,
                         // getContainer: false, // 全局设置 ConfigProvider getPopupContainer 即可
+                        extra: <Space><CloseOutlined onClick={() => setDrawerVisit(false)} /></Space>
                     }
                 }
                 visible={drawerVisit}
@@ -289,6 +360,39 @@ export default () => {
             </DrawerForm>
             <ProTable<StrategyItem>
                 columns={strategyColumns}
+                rowSelection={{
+                    onChange: onSelectChange,
+                }}
+                tableAlertRender={false}
+                headerTitle={
+                    <Space size={12}>
+                        <span>
+                            <Button
+                                key="add-strategy"
+                                type="primary"
+                                icon={<PlusOutlined />}
+                                onClick={() => {
+                                    setDrawerVisit(true);
+                                }}
+                            >
+                                新建
+                            </Button>
+                        </span>
+                        <span>
+                            <Button
+                                key="add-strategy"
+                                type="default"
+                                icon={<DeleteOutlined />}
+                                disabled={delButtonDisable}
+                                onClick={() => {
+                                    deleteSelectRows();
+                                }}
+                            >
+                                删除
+                            </Button>
+                        </span>
+                    </Space>
+                }
                 actionRef={strategyTableRef}
                 cardBordered
                 request={async (
@@ -340,17 +444,10 @@ export default () => {
                 }}
                 pagination={{
                     pageSize: 5,
+                    showQuickJumper: true,
                 }}
                 dateFormatter="string"
-                headerTitle=""
                 options={false}
-                toolBarRender={() => [
-                    <Button key="button" icon={<PlusOutlined />} type="primary" onClick={() => {
-                        setDrawerVisit(true);
-                    }}>
-                        新建
-                    </Button>,
-                ]}
             />
             <Modal
                 title="策略详情"

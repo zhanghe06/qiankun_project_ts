@@ -24,10 +24,28 @@ import zhTW from 'antd/lib/locale/zh_TW';
 // }
 
 function render(props: any) {
-    const { container } = props;
+    console.log(props);
+    const { container, lang, theme } = props;
+
+    // 语言继承
+    let locale = zhCN;
+    if (lang == 'zh-tw') {
+        locale = zhTW;
+    }
+    if (lang == 'en-us') {
+        locale = enUS;
+    }
+
+    // 主题继承
+    // ConfigProvider.config({
+    //     theme: {
+    //         primaryColor: '#ff0000',
+    //     }
+    // });
+
     ReactDOM.render(
         <ConfigProvider
-            locale={enUS}
+            locale={locale}
             getPopupContainer={(triggerNode) => container ? container.querySelector('#root-app-react') : document.querySelector('#root-app-react')}
         >
             <Layout />

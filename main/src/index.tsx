@@ -18,7 +18,13 @@ registerMicroApps([
     name: 'app_react', // app name registered
     entry: '//localhost:3000',
     container: '#micro-container',
-    activeRule: '/app/react'
+    activeRule: '/app/react',
+    props: {
+      lang: 'en-us', // zh-cn zh-tw en-us
+      userid: 'admin',
+      username: 'admin',
+      theme: '#ffff00'
+    },
   },
   {
     name: 'app_vue',

@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Link} from 'react-router-dom'
 import Cert from './cert/Index';
 import Strategy from './strategy/Index';
 import Conf from './conf/Index';
-import './Layout.css'
+import './Layout.less'
 
 
 const {TabPane} = Tabs;

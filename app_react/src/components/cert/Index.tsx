@@ -4,8 +4,8 @@ import ProTable from '@ant-design/pro-table';
 import { EyeOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import {Modal, Button, Descriptions, message} from 'antd';
 import moment from 'moment';
-import 'moment/locale/zh-cn'
-import CertService from '../../api/cert'
+import 'moment/locale/zh-cn';
+import CertService from '../../api/cert';
 
 
 moment.locale('zh-cn');
@@ -160,10 +160,10 @@ export default () => {
             valueType: 'option',
             render: (text, record, _, action) => [
                 <a onClick={() => showCertInfo(record)} key="show">
-                    <EyeOutlined />查看
+                    <EyeOutlined />
                 </a>,
                 <a onClick={() => delCertInfo(record)} key="del">
-                    <DeleteOutlined />删除
+                    <DeleteOutlined />
                 </a>,
             ],
         },
@@ -221,6 +221,7 @@ export default () => {
                 }}
                 pagination={{
                     pageSize: 5,
+                    showQuickJumper: true,
                 }}
                 dateFormatter="string"
                 headerTitle=""

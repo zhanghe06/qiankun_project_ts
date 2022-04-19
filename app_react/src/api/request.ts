@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const http = axios.create({
-    baseURL: "http://127.0.0.1:30975/",
+    baseURL: "http://127.0.0.1:30975/", // build之后的静态文件，打开之后依然能访问接口
     // baseURL: "/",
     headers: {
         "Content-type": "application/json"

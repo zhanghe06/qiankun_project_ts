@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { message, Row, Col, Space } from 'antd';
 import ProForm, { ProFormText, ProFormDigit } from '@ant-design/pro-form';
-import ConfService from '../../api/conf'
+import ConfService from '../../api/conf';
 
 
 export default () => {

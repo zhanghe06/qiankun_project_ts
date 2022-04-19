@@ -6,6 +6,8 @@
 
 [ProComponents](https://procomponents.ant.design/table/)
 
+[Ant Design](https://ant.design/components/)
+
 ```
 mkdir main app_react app_vue
 yarn create react-app main --template typescript
@@ -31,18 +33,41 @@ cd app_react
 yarn add antd
 yarn add @ant-design/icons
 yarn add @ant-design/pro-table
-yarn add @rescripts/cli -D
 yarn add @types/axios
 yarn add react-router-dom@5
 yarn add @types/react-router-dom@5
 yarn add moment
-yarn add style-loader
-yarn add css-loader
-yarn add less-loader
-yarn add -D @pmmmwh/react-refresh-webpack-plugin react-refresh
+
+yarn add @rescripts/cli -D
+yarn add @rescripts/rescript-env -D
+yarn add @rescripts/rescript-use-babel-config -D
+yarn add babel-plugin-import -D
+yarn add less -D
+yarn add less-loader -D
 ```
 
 注意：Route 不能设置 exact
+
+静态修改主题需要插件：`babel-plugin-import`
+package.json
+```
+"babel": {
+    "presets": [
+      "react-app"
+    ],
+    "plugins": [
+      [
+        "import",
+        {
+          "libraryName": "antd",
+          "style": true
+        }
+      ]
+    ]
+  }
+```
+
+[动态修改主题](https://ant.design/docs/react/customize-theme-variable-cn)
 
 
 ## Helm Chart
