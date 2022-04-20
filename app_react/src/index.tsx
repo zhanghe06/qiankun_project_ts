@@ -44,12 +44,10 @@ function render(props: any) {
         moment.locale('en-gb')
     }
 
-    // 主题继承
-    // ConfigProvider.config({
-    //     theme: {
-    //         primaryColor: '#ff0000',
-    //     }
-    // });
+    // 主题继承（https://ant.design/components/config-provider-cn/）
+    ConfigProvider.config({
+        theme: theme
+    });
 
     ReactDOM.render(
         <ConfigProvider

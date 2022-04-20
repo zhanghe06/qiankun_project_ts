@@ -51,6 +51,47 @@ yarn add less-loader -D
 注意：Route 不能设置 exact
 
 静态修改主题需要插件：`babel-plugin-import`
+
+Layout.less
+```
+//@import '~antd/lib/style/themes/default.less';
+//@import '~antd/dist/antd.less';
+@import '~antd/dist/antd.variable.less';
+//@import '~antd/dist/antd.compact.less';
+@import '@ant-design/pro-table/dist/table.less';
+@import '@ant-design/pro-form/dist/form.less';
+
+
+.ant-table-thead > tr > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
+    width: 0;
+}
+
+.ant-tabs-top > .ant-tabs-nav::before, .ant-tabs-bottom > .ant-tabs-nav::before, .ant-tabs-top > div > .ant-tabs-nav::before, .ant-tabs-bottom > div > .ant-tabs-nav::before {
+    border-bottom: 0;
+}
+
+.ant-pro-table .ant-pro-card-border {
+    border: 0;
+    .ant-pro-card-body {
+        padding: 0;
+    }
+}
+
+//@primary-color: #1890ff; // 全局主色
+//@link-color: #1890ff; // 链接色
+//@success-color: #52c41a; // 成功色
+//@warning-color: #faad14; // 警告色
+//@error-color: #f5222d; // 错误色
+//@font-size-base: 14px; // 主字号
+//@heading-color: rgba(0, 0, 0, 0.85); // 标题色
+//@text-color: rgba(0, 0, 0, 0.65); // 主文本色
+//@text-color-secondary: rgba(0, 0, 0, 0.45); // 次文本色
+//@disabled-color: rgba(0, 0, 0, 0.25); // 失效色
+@border-radius-base: 4px; // 组件/浮层圆角
+//@border-color-base: #d9d9d9; // 边框色
+//@box-shadow-base: 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05); // 浮层阴影
+```
+
 package.json
 ```
 "babel": {
@@ -69,8 +110,60 @@ package.json
   }
 ```
 
+.rescriptsrc.js
+```
+module.exports = {
+  webpack: (config) => {
+
+    // qiankun micro app
+    ...
+
+    // custom theme
+    let rule = config.module.rules.find((rule) => rule.oneOf);
+    rule.oneOf.unshift({
+      test: /\.less$/,
+      use: [
+        {
+          loader: 'style-loader'
+        },
+        {
+          loader: 'css-loader'
+        },
+        // 在加载、编译 antd 的less文件过程中，设置主题色（也就是在获取antd最终样式前、调整了antd）
+        {
+          loader: 'less-loader',
+          options: {
+            lessOptions: {
+              javascriptEnabled: true,
+              modifyVars: {
+                'primary-color': '#25b8f4'
+              }
+            }
+          }
+        }
+      ]
+    });
+
+    return config;
+  },
+
+  ...
+};
+```
+
 [动态修改主题](https://ant.design/docs/react/customize-theme-variable-cn)
 
+```
+ConfigProvider.config({
+    theme: {
+        primaryColor: '#f890ff',
+        errorColor: '#ff4d4f',
+        warningColor: '#faad14',
+        successColor: '#52c41a',
+        infoColor: '#1890ff',
+    },
+});
+```
 
 ## Helm Chart
 

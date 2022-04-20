@@ -23,7 +23,13 @@ registerMicroApps([
       lang: 'zh-tw', // zh-cn zh-tw en-us
       userid: 'admin',
       username: 'admin',
-      theme: '#ffff00'
+      theme: {
+        primaryColor: '#f86eef',
+        // errorColor: '#ff4d4f',
+        // warningColor: '#faad14',
+        // successColor: '#52c41a',
+        // infoColor: '#1890ff',
+      },
     },
   },
   {
