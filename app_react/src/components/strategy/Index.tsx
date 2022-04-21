@@ -79,11 +79,17 @@ export default () => {
                     const res = StrategyService.delete(record.id)
                     console.log(res)
                     res.then(() => {
-                        return message.success('删除成功');
+                        return message.success({
+                            content: '删除成功',
+                            getPopupContainer: (triggerNode: HTMLElement) => document.querySelector('#root-app-react')
+                        });
                     });
                     res.catch((e) => {
                         console.log(e)
-                        return message.error('删除失败');
+                        return message.error({
+                            content: '删除失败',
+                            getPopupContainer: (triggerNode: HTMLElement) => document.querySelector('#root-app-react')
+                        });
                     });
                     strategyTableRef.current?.reload();
                 }
@@ -179,14 +185,14 @@ export default () => {
             dataIndex: 'created_at',
             valueType: 'dateRange',
             hideInTable: true,
-            search: {
-                transform: (value) => {
-                    return {
-                        startTime: value[0],
-                        endTime: value[1],
-                    };
-                },
-            },
+            // search: {
+            //     transform: (value) => {
+            //         return {
+            //             startTime: value[0],
+            //             endTime: value[1],
+            //         };
+            //     },
+            // },
         },
         {
             title: '操作',
@@ -249,11 +255,19 @@ export default () => {
                     selectRows.forEach((item, index) => {
                         const res = StrategyService.delete(item.id)
                         res.then(() => {
-                            return message.success({content: '删除成功', key: item.id});
+                            return message.success({
+                                content: '删除成功',
+                                key: item.id,
+                                getPopupContainer: (triggerNode: HTMLElement) => document.querySelector('#root-app-react')
+                            });
                         });
                         res.catch((e) => {
                             console.log(e)
-                            return message.error({content: '删除失败', key: item.id});
+                            return message.error({
+                                content: '删除失败',
+                                key: item.id,
+                                getPopupContainer: (triggerNode: HTMLElement) => document.querySelector('#root-app-react')
+                            });
                         });
                     })
                     strategyTableRef.current?.reload();
@@ -303,14 +317,20 @@ export default () => {
                         const res = await StrategyService.update(values, strategyId)
                         console.log(values)
                         console.log(res)
-                        message.success('编辑成功');
+                        message.success({
+                            content: '编辑成功',
+                            getPopupContainer: (triggerNode: HTMLElement) => document.querySelector('#root-app-react')
+                        });
                         strategyTableRef.current?.reload();
                         return true;
                     } else {
                         const res = await StrategyService.create(values)
                         console.log(values)
                         console.log(res)
-                        message.success('创建成功');
+                        message.success({
+                            content: '创建成功',
+                            getPopupContainer: (triggerNode: HTMLElement) => document.querySelector('#root-app-react')
+                        });
                         strategyTableRef.current?.reload();
                         return true;
                     }
@@ -432,7 +452,7 @@ export default () => {
                         if (type === 'get') {
                             return {
                                 ...values,
-                                created_at: [values.startTime, values.endTime],
+                                // created_at: [values.startTime, values.endTime],
                             };
                         }
                         return values;

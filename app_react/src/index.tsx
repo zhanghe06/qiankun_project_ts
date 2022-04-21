@@ -46,7 +46,10 @@ function render(props: any) {
 
     // 主题继承（https://ant.design/components/config-provider-cn/）
     ConfigProvider.config({
-        theme: theme
+        // theme: theme
+        theme: {
+            primaryColor: theme?.primaryColor
+        }
     });
 
     ReactDOM.render(
@@ -62,7 +65,11 @@ function render(props: any) {
 }
 
 if (!(window as any).__POWERED_BY_QIANKUN__) {
-    render({});
+    if (process.env.NODE_ENV === "production") {
+        window.location.href = 'http://localhost:3080';  // 禁止单页访问，跳转基座
+    } else {
+        render({});
+    }
 }
 
 /**

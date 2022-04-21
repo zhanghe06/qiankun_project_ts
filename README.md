@@ -10,6 +10,19 @@
 
 [Ant Design Pro](https://pro.ant.design/zh-CN/)
 
+环境
+```
+node -v  # v16.14.2
+npm -v  # 8.5.0
+yarn -v  # 1.22.17
+```
+
+镜像加速
+```
+yarn config set registry https://registry.yarnpkg.com
+yarn config get registry
+```
+
 ```
 mkdir main app_react app_vue
 yarn create react-app main --template typescript

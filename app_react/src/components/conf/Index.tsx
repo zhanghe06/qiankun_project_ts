@@ -36,7 +36,10 @@ export default () => {
                 const res = await ConfService.put_email(values);
                 console.log(values);
                 console.log(res);
-                message.success('提交成功');
+                message.success({
+                    content: '提交成功',
+                    getPopupContainer: (triggerNode: HTMLElement) => document.querySelector('#root-app-react')
+                });
             }}
             params={{}}
             request={async (

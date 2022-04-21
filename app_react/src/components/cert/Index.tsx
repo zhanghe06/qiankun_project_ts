@@ -49,11 +49,17 @@ export default () => {
                     const res = CertService.delete(record.id)
                     console.log(res)
                     res.then(() => {
-                        message.success('删除成功');
+                        message.success({
+                            content: '删除成功',
+                            getPopupContainer: (triggerNode: HTMLElement) => document.querySelector('#root-app-react')
+                        });
                     });
                     res.catch((e) => {
                         console.log(e)
-                        message.error('删除失败');
+                        message.error({
+                            content: '删除失败',
+                            getPopupContainer: (triggerNode: HTMLElement) => document.querySelector('#root-app-react')
+                        });
                     });
                     certTableRef.current?.reload();
                 }
@@ -113,28 +119,28 @@ export default () => {
             dataIndex: 'not_before',
             valueType: 'dateRange',
             hideInTable: true,
-            search: {
-                transform: (value) => {
-                    return {
-                        not_before_start_time: value[0],
-                        not_before_end_time: value[1],
-                    };
-                },
-            },
+            // search: {
+            //     transform: (value) => {
+            //         return {
+            //             not_before_start_time: value[0],
+            //             not_before_end_time: value[1],
+            //         };
+            //     },
+            // },
         },
         {
             title: '效期结束',
             dataIndex: 'not_after',
             valueType: 'dateRange',
             hideInTable: true,
-            search: {
-                transform: (value) => {
-                    return {
-                        not_after_start_time: value[0],
-                        not_after_end_time: value[1],
-                    };
-                },
-            },
+            // search: {
+            //     transform: (value) => {
+            //         return {
+            //             not_after_start_time: value[0],
+            //             not_after_end_time: value[1],
+            //         };
+            //     },
+            // },
         },
         {
             title: '证书状态',
@@ -209,7 +215,7 @@ export default () => {
                         if (type === 'get') {
                             return {
                                 ...values,
-                                created_at: [values.startTime, values.endTime],
+                                // created_at: [values.startTime, values.endTime],
                             };
                         }
                         return values;
