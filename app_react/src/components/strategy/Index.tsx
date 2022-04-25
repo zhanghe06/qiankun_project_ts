@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, { useRef, useState } from 'react';
 import {
     DeleteOutlined,
     ExclamationCircleOutlined,
@@ -7,12 +7,11 @@ import {
     PlusOutlined,
     CloseOutlined,
 } from '@ant-design/icons';
-import {Modal, Button, Row, Col, Space, message, Descriptions, Switch} from 'antd';
-import type {ProColumns, ActionType} from '@ant-design/pro-table';
+import { Modal, Button, Row, Col, Space, message, Descriptions, Switch } from 'antd';
+import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import {
     DrawerForm,
-    ProFormCheckbox,
     ProFormRadio,
     ProFormText,
     ProFormDigit,
@@ -20,7 +19,8 @@ import {
 } from '@ant-design/pro-form';
 import moment from 'moment';
 import StrategyService from '../../api/strategy';
-import {Key} from "antd/lib/table/interface";
+import { Key } from "antd/lib/table/interface";
+import { _ } from '../../i18n';
 
 
 export default () => {
@@ -57,23 +57,23 @@ export default () => {
     }
 
     const delStrategyInfo = (record: StrategyItem) => {
-        if ( record.enabled_state === 1 ) {
+        if (record.enabled_state === 1) {
             Modal.confirm({
                 title: '启用中的策略不允许删除！',
-                icon: <ExclamationCircleOutlined />,
+                icon: <ExclamationCircleOutlined/>,
                 content: '',
-                okText: '确认',
-                cancelText: '取消',
-                getContainer: document.querySelector('#root-app-react') as any,
+                // okText: '确认',
+                // cancelText: '取消',
+                getContainer: document.querySelector('#root-app-react') as HTMLElement,
             });
         } else {
             Modal.confirm({
                 title: '确定删除选中的策略吗？',
-                icon: <ExclamationCircleOutlined />,
+                icon: <ExclamationCircleOutlined/>,
                 content: '',
-                okText: '确认',
-                cancelText: '取消',
-                getContainer: document.querySelector('#root-app-react') as any,
+                // okText: '确认',
+                // cancelText: '取消',
+                getContainer: document.querySelector('#root-app-react') as HTMLElement,
                 onOk: () => {
                     console.log(record)
                     const res = StrategyService.delete(record.id)
@@ -106,14 +106,14 @@ export default () => {
     };
 
     const onEnabledStateChange = (record: StrategyItem, checked: boolean) => {
-        const res = StrategyService.update({enabled_state: checked?1:0}, record.id)
+        const res = StrategyService.update({enabled_state: checked ? 1 : 0}, record.id)
         console.log(res)
         strategyTableRef.current?.reload();
     }
 
     const optionsNoticeType = [
-        { label: '邮件', value: 0},
-        { label: '短信', value: 1, disabled: true},
+        {label: _('email'), value: 0},
+        {label: _('sms'), value: 1, disabled: true},
     ];
 
     type StrategyItem = {
@@ -138,10 +138,10 @@ export default () => {
             valueType: 'select',
             valueEnum: {
                 0: {
-                    text: '邮件',
+                    text: _('email'),
                 },
                 1: {
-                    text: '短信',
+                    text: _('sms'),
                     disabled: true,
                 },
             },
@@ -198,22 +198,24 @@ export default () => {
             title: '操作',
             valueType: 'option',
             render: (text, record, _, action) => [
-                <Switch checked={record.enabled_state==1} onChange={(checked: boolean, event: MouseEvent) => onEnabledStateChange(record, checked)} key="switch" size="small" />,
+                <Switch checked={record.enabled_state == 1}
+                        onChange={(checked: boolean, event: MouseEvent) => onEnabledStateChange(record, checked)}
+                        key="switch" size="small"/>,
                 <a onClick={() => showStrategyInfo(record)} key="show">
-                    <EyeOutlined />
+                    <EyeOutlined/>
                 </a>,
                 <a onClick={() => editStrategyInfo(record)} key="edit">
-                    <FormOutlined />
+                    <FormOutlined/>
                 </a>,
                 <a onClick={() => delStrategyInfo(record)} key="del">
-                    <DeleteOutlined />
+                    <DeleteOutlined/>
                 </a>,
             ],
         },
     ];
     const formItemLayout = {
-        labelCol: { span: 4 },
-        wrapperCol: { span: 12 },
+        labelCol: {span: 4},
+        wrapperCol: {span: 12},
     };
 
     const onSelectChange = (selectedRowKeys: Key[], selectedRows: StrategyItem[]) => {
@@ -228,7 +230,7 @@ export default () => {
     const deleteSelectRows = () => {
         Modal.confirm({
             title: '确定删除选中的策略吗？',
-            icon: <ExclamationCircleOutlined />,
+            icon: <ExclamationCircleOutlined/>,
             content: '',
             okText: '确认',
             cancelText: '取消',
@@ -240,13 +242,14 @@ export default () => {
                 )
                 if (enabledCount > 0) {
                     const warnMessages = selectRows.map((item, index) => {
-                        if (item.enabled_state == 1) {
-                            return <Descriptions.Item label="" key={index}>通知策略（通知类型：{item.notice_type==0?'邮件':'短信'};通知时间：提前{item.trigger_threshold}天）启用中。</Descriptions.Item>
+                        if (item.enabled_state === 1) {
+                            return <Descriptions.Item label=""
+                                                      key={index}>通知策略（通知类型：{item.notice_type == 0 ? _('email') : _('sms')};通知时间：提前{item.trigger_threshold}天）启用中。</Descriptions.Item>
                         }
                     })
                     Modal.warning({
                         title: '以下通知策略无法删除',
-                        icon: <ExclamationCircleOutlined />,
+                        icon: <ExclamationCircleOutlined/>,
                         content: <Descriptions title="" column={1}>{warnMessages}</Descriptions>,
                         okText: '确定',
                         getContainer: document.querySelector('#root-app-react') as any,
@@ -288,14 +291,14 @@ export default () => {
             }>
                 name="strategyForm"
                 onVisibleChange={onStrategyFromChange}
-                title={strategyId?"编辑通知策略":"新建通知策略"}
+                title={strategyId ? "编辑通知策略" : "新建通知策略"}
                 formRef={formRef}
                 drawerProps={
                     {
                         closable: false, // 取消显示标题左侧关闭按钮
                         forceRender: true,
                         // getContainer: false, // 全局设置 ConfigProvider getPopupContainer 即可
-                        extra: <Space><CloseOutlined onClick={() => setDrawerVisit(false)} /></Space>
+                        extra: <Space><CloseOutlined onClick={() => setDrawerVisit(false)}/></Space>
                     }
                 }
                 visible={drawerVisit}
@@ -386,7 +389,7 @@ export default () => {
                             <Button
                                 key="add-strategy"
                                 type="primary"
-                                icon={<PlusOutlined />}
+                                icon={<PlusOutlined/>}
                                 onClick={() => {
                                     setDrawerVisit(true);
                                 }}
@@ -398,7 +401,7 @@ export default () => {
                             <Button
                                 key="add-strategy"
                                 type="default"
-                                icon={<DeleteOutlined />}
+                                icon={<DeleteOutlined/>}
                                 disabled={delButtonDisable}
                                 onClick={() => {
                                     deleteSelectRows();
@@ -477,12 +480,15 @@ export default () => {
                     column={1}
                     labelStyle={{justifyContent: 'flex-start', minWidth: 100}}
                 >
-                    <Descriptions.Item label="通知类型">{strategyInfo?.notice_type === 0 ? "邮件" : "短信"}</Descriptions.Item>
-                    <Descriptions.Item label="策略状态">{strategyInfo?.enabled_state === 0 ? "停用" : "启用"}</Descriptions.Item>
+                    <Descriptions.Item label="通知类型">{strategyInfo?.notice_type === 0 ? _('email') : _('sms')}</Descriptions.Item>
+                    <Descriptions.Item
+                        label="策略状态">{strategyInfo?.enabled_state === 0 ? "停用" : "启用"}</Descriptions.Item>
                     <Descriptions.Item label="通知账号">{strategyInfo?.to_emails}</Descriptions.Item>
-                    <Descriptions.Item label="创建日期">{strategyInfo?.created_at ? moment(strategyInfo?.created_at).format('YYYY-MM-DD HH:mm:ss') : ""}</Descriptions.Item>
+                    <Descriptions.Item
+                        label="创建日期">{strategyInfo?.created_at ? moment(strategyInfo?.created_at).format('YYYY-MM-DD HH:mm:ss') : ""}</Descriptions.Item>
                     <Descriptions.Item label="创建人">{strategyInfo?.created_by}</Descriptions.Item>
-                    <Descriptions.Item label="修改日期">{strategyInfo?.updated_at ? moment(strategyInfo?.updated_at).format('YYYY-MM-DD HH:mm:ss') : ""}</Descriptions.Item>
+                    <Descriptions.Item
+                        label="修改日期">{strategyInfo?.updated_at ? moment(strategyInfo?.updated_at).format('YYYY-MM-DD HH:mm:ss') : ""}</Descriptions.Item>
                     <Descriptions.Item label="修改人">{strategyInfo?.updated_by}</Descriptions.Item>
                 </Descriptions>
             </Modal>

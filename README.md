@@ -19,7 +19,9 @@ yarn -v  # 1.22.17
 
 镜像加速
 ```
-yarn config set registry https://registry.yarnpkg.com
+yarn config set registry https://registry.yarnpkg.com  # 官方镜像
+yarn cache clean  # 清理缓存
+yarn config set registry https://registry.npmmirror.com
 yarn config get registry
 ```
 
@@ -107,7 +109,16 @@ Layout.less
 
 package.json
 ```
-"babel": {
+  "devDependencies": {
+    "@rescripts/cli": "^0.0.16",
+    "@rescripts/rescript-env": "^0.0.14",
+    "@rescripts/rescript-use-babel-config": "^0.0.12",
+    "babel-plugin-import": "^1.13.5",
+    "less": "^4.1.2",
+    "less-loader": "^10.2.0"
+  }
+  ...
+  "babel": {
     "presets": [
       "react-app"
     ],
@@ -212,3 +223,22 @@ import "regenerator-runtime/runtime";
 下拉列表、抽屉样式 混乱
 
 通过元素分析，发现：下拉列表和抽屉不是在子应用内渲染
+
+## 国际化
+
+react-intl 不支持嵌套的消息对象，需要对消息进行展平
+
+```
+yarn add react-intl
+```
+
+[在线汉语字典](http://xh.5156edu.com/jtof.php)
+
+## ESLint
+
+[http://eslint.cn/docs/rules](http://eslint.cn/docs/rules)
+
+```
+yarn add eslint -D
+./node_modules/.bin/eslint --init
+```

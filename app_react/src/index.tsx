@@ -8,14 +8,20 @@ import Layout from './components/Layout';
 import reportWebVitals from './reportWebVitals';
 import { ConfigProvider } from 'antd';
 
-import zhCN from 'antd/lib/locale/zh_CN';
-import zhTW from 'antd/lib/locale/zh_TW';
-import enUS from 'antd/lib/locale/en_US';
+import zh_CN from 'antd/lib/locale/zh_CN';
+import zh_TW from 'antd/lib/locale/zh_TW';
+import en_US from 'antd/lib/locale/en_US';
 
 import moment from 'moment';
 import 'moment/locale/zh-cn'
 import 'moment/locale/zh-tw'
 import 'moment/locale/en-gb'
+
+import { IntlProvider } from "react-intl";
+
+import zhCN from "./locales/zh_CN";
+import zhTW from "./locales/zh_TW";
+import enUS from "./locales/en_US";
 
 // ReactDOM.render(
 //   <React.StrictMode>
@@ -28,19 +34,34 @@ import 'moment/locale/en-gb'
 //     container?: any;
 // }
 
+function handleMessages(lang: string) {
+    let res = null;
+    switch (lang) {
+        case "zh-tw":
+            res = zhTW;
+            break;
+        case "en-us":
+            res = enUS;
+            break;
+        default:
+            res = zhCN;
+    }
+    return res;
+}
+
 function render(props: any) {
     console.log(props);
     const { container, lang, theme } = props;
 
     // 语言继承 (时间验证：moment().startOf('hour').fromNow();)
-    let locale = zhCN;
+    let locale = zh_CN;
     moment.locale('zh-cn')
-    if (lang == 'zh-tw') {
-        locale = zhTW;
+    if (lang === 'zh-tw') {
+        locale = zh_TW;
         moment.locale('zh-tw')
     }
-    if (lang == 'en-us') {
-        locale = enUS;
+    if (lang === 'en-us') {
+        locale = en_US;
         moment.locale('en-gb')
     }
 
@@ -57,7 +78,12 @@ function render(props: any) {
             locale={locale}
             getPopupContainer={(triggerNode) => container ? container.querySelector('#root-app-react') : document.querySelector('#root-app-react')}
         >
-            <Layout />
+            <IntlProvider
+                locale={lang}
+                messages={handleMessages(lang) as any}
+            >
+                <Layout />
+            </IntlProvider>
         </ConfigProvider>,
         // <Layout />,
         container ? container.querySelector('#root-app-react') : document.querySelector('#root-app-react')
