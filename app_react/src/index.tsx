@@ -37,10 +37,10 @@ import enUS from "./locales/en_US";
 function handleMessages(lang: string) {
     let res = null;
     switch (lang) {
-        case "zh-tw":
+        case "zh-TW":
             res = zhTW;
             break;
-        case "en-us":
+        case "en-US":
             res = enUS;
             break;
         default:
@@ -51,18 +51,33 @@ function handleMessages(lang: string) {
 
 function render(props: any) {
     console.log(props);
-    const { container, lang, theme } = props;
+    const { container, lang, theme, userid, username } = props;
+
+    // 同步用户信息
+    const token = window.btoa(JSON.stringify({
+        user_id: userid,
+        user_name: username,
+    }))
+    localStorage.setItem("token", token)
 
     // 语言继承 (时间验证：moment().startOf('hour').fromNow();)
-    let locale = zh_CN;
-    moment.locale('zh-cn')
-    if (lang === 'zh-tw') {
-        locale = zh_TW;
-        moment.locale('zh-tw')
-    }
-    if (lang === 'en-us') {
-        locale = en_US;
-        moment.locale('en-gb')
+    let currentLocale = null;
+    let currentLang = null;
+    switch (lang) {
+        case "zh-tw":
+            currentLocale = zh_TW;
+            currentLang = 'zh-TW';
+            moment.locale('zh-tw')
+            break;
+        case "en-us":
+            currentLocale = en_US;
+            currentLang = 'en-US';
+            moment.locale('en-gb')
+            break;
+        default:
+            currentLocale = zh_CN;
+            currentLang = 'zh-CN';
+            moment.locale('zh-cn')
     }
 
     // 主题继承（https://ant.design/components/config-provider-cn/）
@@ -75,12 +90,12 @@ function render(props: any) {
 
     ReactDOM.render(
         <ConfigProvider
-            locale={locale}
+            locale={currentLocale}
             getPopupContainer={(triggerNode) => container ? container.querySelector('#root-app-react') : document.querySelector('#root-app-react')}
         >
             <IntlProvider
-                locale={lang}
-                messages={handleMessages(lang) as any}
+                locale={currentLang}
+                messages={handleMessages(currentLang)}
             >
                 <Layout />
             </IntlProvider>

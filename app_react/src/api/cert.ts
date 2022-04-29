@@ -20,7 +20,7 @@ class CertService {
         return http.get<any>("/cert", {params});
     }
     get(id: number) {
-        return http.get<CertInterface>(`/cert/${id}`);
+        return http.get<any>(`/cert/${id}`);
     }
     create(data: CertInterface) {
         return http.post<CertInterface>("/cert", data);

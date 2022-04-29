@@ -163,11 +163,11 @@ export default () => {
             valueType: 'select',
             valueEnum: {
                 0: {
-                    text: '停用',
+                    text: _('disabled'),
                     status: 'Error',
                 },
                 1: {
-                    text: '启用',
+                    text: _('enabled'),
                     status: 'Success',
                 },
             },
@@ -394,7 +394,7 @@ export default () => {
                                     setDrawerVisit(true);
                                 }}
                             >
-                                新建
+                                {_('operation_create')}
                             </Button>
                         </span>
                         <span>
@@ -407,7 +407,7 @@ export default () => {
                                     deleteSelectRows();
                                 }}
                             >
-                                删除
+                                {_('operation_delete')}
                             </Button>
                         </span>
                     </Space>
@@ -423,10 +423,11 @@ export default () => {
                 ) => {
                     // 这里需要返回一个 Promise,在返回之前你可以进行数据转化
                     // 如果需要转化参数可以在这里进行修改
+                    const {current, pageSize, ...apiParams} = params;
                     const msg = await StrategyService.getAll({
-                        ...params,
-                        offset: params.pageSize && params.current ? (params.pageSize * (params.current - 1)) : 0,
-                        limit: params.pageSize,
+                        ...apiParams,
+                        offset: pageSize && current ? (pageSize * (current - 1)) : 0,
+                        limit: pageSize,
                     });
                     // const msg = await CertService.getAll({...params});
                     return {
@@ -450,16 +451,17 @@ export default () => {
                     labelWidth: 'auto',
                 }}
                 form={{
+                    syncToUrl: false // 必须为false，不然翻页会触发BUG
                     // 由于配置了 transform，提交的参数与定义的不同这里需要转化一下
-                    syncToUrl: (values, type) => {
-                        if (type === 'get') {
-                            return {
-                                ...values,
-                                // created_at: [values.startTime, values.endTime],
-                            };
-                        }
-                        return values;
-                    },
+                    // syncToUrl: (values, type) => {
+                    //     if (type === 'get') {
+                    //         return {
+                    //             ...values,
+                    //             // created_at: [values.startTime, values.endTime],
+                    //         };
+                    //     }
+                    //     return values;
+                    // },
                 }}
                 pagination={{
                     pageSize: 5,
@@ -482,7 +484,7 @@ export default () => {
                 >
                     <Descriptions.Item label="通知类型">{strategyInfo?.notice_type === 0 ? _('email') : _('sms')}</Descriptions.Item>
                     <Descriptions.Item
-                        label="策略状态">{strategyInfo?.enabled_state === 0 ? "停用" : "启用"}</Descriptions.Item>
+                        label="策略状态">{strategyInfo?.enabled_state === 0 ? _('disabled') : _('enabled')}</Descriptions.Item>
                     <Descriptions.Item label="通知账号">{strategyInfo?.to_emails}</Descriptions.Item>
                     <Descriptions.Item
                         label="创建日期">{strategyInfo?.created_at ? moment(strategyInfo?.created_at).format('YYYY-MM-DD HH:mm:ss') : ""}</Descriptions.Item>

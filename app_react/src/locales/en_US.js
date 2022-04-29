@@ -8,9 +8,13 @@ const enUS = {
   operation_create: "Create",
   operation_update: "Update",
   operation_delete: "Delete",
+  operation_enable: "Enable",
+  operation_disable: "Disable",
   // 状态
   success: "Success",
   failure: "Failure",
+  enabled: "Enabled",
+  disabled: "Disabled",
   // 通知类型
   email: "Email",
   sms: "SMS",

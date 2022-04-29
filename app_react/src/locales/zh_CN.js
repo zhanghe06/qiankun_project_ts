@@ -8,9 +8,13 @@ const zhCN = {
   operation_create: "创建",
   operation_update: "更新",
   operation_delete: "删除",
+  operation_enable: "启用",
+  operation_disable: "停用",
   // 状态
   success: "成功",
   failure: "失败",
+  enabled: "启用",
+  disabled: "停用",
   // 通知类型
   email: "邮件",
   sms: "短信",

@@ -5,7 +5,7 @@ import { EyeOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-des
 import {Modal, Button, Descriptions, message} from 'antd';
 import moment from 'moment';
 import CertService from '../../api/cert';
-import { FormattedMessage } from "react-intl";
+import { _ } from '../../i18n';
 
 
 export default () => {
@@ -14,8 +14,10 @@ export default () => {
     const [isCertInfoVisible, setIsCertInfoVisible] = useState(false);
     const [certInfo, setCertInfo] = useState<CertItem>();
 
-    const showCertInfo = (record: CertItem) => {
+    const showCertInfo = async (record: CertItem) => {
         setIsCertInfoVisible(true);
+        const res = await CertService.get(record.id);
+        record.cert_content = res.data.cert_content
         setCertInfo(record);
     };
 
@@ -33,8 +35,8 @@ export default () => {
                 title: '启用中的证书不允许删除！',
                 icon: <ExclamationCircleOutlined />,
                 content: '',
-                okText: '确认',
-                cancelText: '取消',
+                // okText: '确认',
+                // cancelText: '取消',
                 getContainer: document.querySelector('#root-app-react') as any,
             });
         } else {
@@ -42,8 +44,8 @@ export default () => {
                 title: '确定删除选中的证书吗？',
                 icon: <ExclamationCircleOutlined />,
                 content: '',
-                okText: '确认',
-                cancelText: '取消',
+                // okText: '确认',
+                // cancelText: '取消',
                 getContainer: document.querySelector('#root-app-react') as any,
                 onOk: () => {
                     console.log(record)
@@ -96,6 +98,9 @@ export default () => {
         {
             title: '接口版本',
             dataIndex: 'p_version',
+            fieldProps: {
+                maxLength: 64
+            }
         },
         {
             title: '内容仓库',
@@ -149,11 +154,11 @@ export default () => {
             valueType: 'select',
             valueEnum: {
                 1: {
-                    text: '启用',
+                    text: _('enabled'),
                     status: 'Success',
                 },
                 0: {
-                    text: '停用',
+                    text: _('disabled'),
                     status: 'Error',
                 }
             },
@@ -187,10 +192,11 @@ export default () => {
                 ) => {
                     // 这里需要返回一个 Promise,在返回之前你可以进行数据转化
                     // 如果需要转化参数可以在这里进行修改
+                    const {current, pageSize, ...apiParams} = params;
                     const msg = await CertService.getAll({
-                        ...params,
-                        offset: params.pageSize && params.current ? (params.pageSize * (params.current - 1)) : 0,
-                        limit: params.pageSize,
+                        ...apiParams,
+                        offset: pageSize && current ? (pageSize * (current - 1)) : 0,
+                        limit: pageSize,
                     });
                     // const msg = await CertService.getAll({...params});
                     return {
@@ -211,16 +217,17 @@ export default () => {
                     labelWidth: 'auto',
                 }}
                 form={{
+                    syncToUrl: false // 必须为false，不然翻页会触发BUG
                     // 由于配置了 transform，提交的参数与定义的不同这里需要转化一下
-                    syncToUrl: (values, type) => {
-                        if (type === 'get') {
-                            return {
-                                ...values,
-                                // created_at: [values.startTime, values.endTime],
-                            };
-                        }
-                        return values;
-                    },
+                    // syncToUrl: (values, type) => {
+                    //     if (type === 'get') {
+                    //         return {
+                    //             ...values,
+                    //             // created_at: [values.startTime, values.endTime],
+                    //         };
+                    //     }
+                    //     return values;
+                    // },
                 }}
                 pagination={{
                     pageSize: 5,

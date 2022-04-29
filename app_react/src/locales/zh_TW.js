@@ -8,9 +8,13 @@ const zhTW = {
   operation_create: "創建",
   operation_update: "更新",
   operation_delete: "刪除",
+  operation_enable: "啓用",
+  operation_disable: "停用",
   // 状态
   success: "成功",
   failure: "失敗",
+  enabled: "啓用",
+  disabled: "停用",
   // 通知类型
   email: "郵件",
   sms: "簡訊",
