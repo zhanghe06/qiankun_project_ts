@@ -150,6 +150,7 @@ export default () => {
             title: '通知时间',
             dataIndex: 'trigger_threshold',
             search: false,
+            sorter: true,
         },
         {
             title: '通知账号',
@@ -177,7 +178,7 @@ export default () => {
             key: 'showTime',
             dataIndex: 'created_at',
             valueType: 'dateTime',
-            sorter: false,
+            sorter: true,
             hideInSearch: true,
         },
         {
@@ -421,6 +422,14 @@ export default () => {
                     sort,
                     filter,
                 ) => {
+                    console.log(params)
+                    console.log(sort)
+                    console.log(filter)
+                    let sorter = "";
+                    for (const sortKey in sort) {
+                        sorter = [sortKey, sort[sortKey]].join(" ")
+                    }
+                    console.log(sorter);
                     // 这里需要返回一个 Promise,在返回之前你可以进行数据转化
                     // 如果需要转化参数可以在这里进行修改
                     const {current, pageSize, ...apiParams} = params;
@@ -428,6 +437,7 @@ export default () => {
                         ...apiParams,
                         offset: pageSize && current ? (pageSize * (current - 1)) : 0,
                         limit: pageSize,
+                        sorter: sorter,
                     });
                     // const msg = await CertService.getAll({...params});
                     return {
