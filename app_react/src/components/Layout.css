@@ -1,5 +1,5 @@
-@import '@ant-design/pro-table/dist/table.css';
-@import '@ant-design/pro-form/dist/form.css';
+/*@import '@ant-design/pro-table/dist/table.css';*/
+/*@import '@ant-design/pro-form/dist/form.css';*/
 @import '~antd/dist/antd.variable.css';
 
 .ant-table-thead > tr > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
@@ -20,4 +20,11 @@
 
 .ant-input-affix-wrapper, .ant-btn, .ant-select:not(.ant-select-customize-input) .ant-select-selector, .ant-picker  {
     border-radius: 4px;
+}
+
+.ant-table.ant-table-middle .ant-table-tbody .ant-table-wrapper:only-child .ant-table {
+    /* margin: -12px -8px -12px 25px; */
+    margin: 0;
+    padding-left: 48px;
+    /*padding-left: 98px;*/
 }

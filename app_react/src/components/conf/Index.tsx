@@ -38,7 +38,7 @@ export default () => {
                 console.log(res);
                 message.success({
                     content: '提交成功',
-                    getPopupContainer: (triggerNode: HTMLElement) => document.querySelector('#root-app-react')
+                    getPopupContainer: (triggerNode: HTMLElement) => document.querySelector('#root-app-react')!
                 });
             }}
             params={{}}

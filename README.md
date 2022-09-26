@@ -10,6 +10,11 @@
 
 [Ant Design Pro](https://pro.ant.design/zh-CN/)
 
+其它优秀的UI库：
+
+[MUI X](https://mui.com/zh/x/)
+
+
 环境
 ```
 node -v  # v16.14.2
@@ -241,4 +246,51 @@ yarn add react-intl
 ```
 yarn add eslint -D
 ./node_modules/.bin/eslint --init
+```
+
+## 单元测试
+
+https://jestjs.io/zh-Hans/docs/26.x/getting-started
+
+```
+yarn add jest@26.4.0 -D
+jest --init         # 生成一个基础配置文件
+yarn add babel-jest@26.4.0 @babel/core @babel/preset-env -D    # 使用 Babel
+yarn add @babel/preset-typescript -D                    # 使用 TypeScript
+yarn add ts-jest -D
+yarn add @types/jest@26.4.0 -D
+```
+
+## 动态菜单方案
+
+背景：子应用动态安装之后，向基座注册菜单并显示，卸载子应用之后，菜单消失
+
+架构：K8S 微服务
+
+方案一：
+
+deployment lifecycle(postStart、preStop)；
+同时修改strategy更新策略类型，将默认策略滚动升级(RollingUpdate)改为重建(Recreate)；
+修改策略是因为滚动升级的方案，新pod会先创建，旧pod会后注销，导致preStop钩子最后执行，升级后菜单消失了；
+
+方案二：
+
+helm hook(post-install、post-upgrade、post-delete)
+
+## REACT-打包后本地打开的问题
+
+1. 首页路径的问题，找到`package.json`，设置`"homepage:'.'"`
+2. 项目是用`create-react-app`构建的，路由用的`react-router-dom`，打包后路由跳转不了，会报错。
+   这是由于`BrowserRouter`不支持本地file启动，需要该用`HashRouter`。
+   如果是使用`router5`的话，需要设置一下`browserPlugin`里面的`useHash`
+    ```
+    BrowserRouter   访问格式：xxx/home   需要服务端去配置支持一下
+    HashRouter      访问格式：xxx/#/home
+    ```
+
+## Type '{}' is not assignable to type 'ReactNode'
+
+```
+-    "@types/react": "^17.0.20",
++    "@types/react": "^18.0.0",
 ```

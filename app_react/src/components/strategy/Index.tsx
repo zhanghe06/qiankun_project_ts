@@ -81,14 +81,14 @@ export default () => {
                     res.then(() => {
                         return message.success({
                             content: '删除成功',
-                            getPopupContainer: (triggerNode: HTMLElement) => document.querySelector('#root-app-react')
+                            getPopupContainer: (triggerNode: HTMLElement) => document.querySelector('#root-app-react')!
                         });
                     });
                     res.catch((e) => {
                         console.log(e)
                         return message.error({
                             content: '删除失败',
-                            getPopupContainer: (triggerNode: HTMLElement) => document.querySelector('#root-app-react')
+                            getPopupContainer: (triggerNode: HTMLElement) => document.querySelector('#root-app-react')!
                         });
                     });
                     strategyTableRef.current?.reload();
@@ -200,7 +200,7 @@ export default () => {
             valueType: 'option',
             render: (text, record, _, action) => [
                 <Switch checked={record.enabled_state == 1}
-                        onChange={(checked: boolean, event: MouseEvent) => onEnabledStateChange(record, checked)}
+                        onChange={(checked: boolean, event: React.MouseEvent<HTMLButtonElement>) => onEnabledStateChange(record, checked)}
                         key="switch" size="small"/>,
                 <a onClick={() => showStrategyInfo(record)} key="show">
                     <EyeOutlined/>
@@ -262,7 +262,7 @@ export default () => {
                             return message.success({
                                 content: '删除成功',
                                 key: item.id,
-                                getPopupContainer: (triggerNode: HTMLElement) => document.querySelector('#root-app-react')
+                                getPopupContainer: (triggerNode: HTMLElement) => document.querySelector('#root-app-react')!
                             });
                         });
                         res.catch((e) => {
@@ -270,7 +270,7 @@ export default () => {
                             return message.error({
                                 content: '删除失败',
                                 key: item.id,
-                                getPopupContainer: (triggerNode: HTMLElement) => document.querySelector('#root-app-react')
+                                getPopupContainer: (triggerNode: HTMLElement) => document.querySelector('#root-app-react')!
                             });
                         });
                     })
@@ -291,7 +291,7 @@ export default () => {
                 created_at?: string
             }>
                 name="strategyForm"
-                onVisibleChange={onStrategyFromChange}
+                onOpenChange={onStrategyFromChange}
                 title={strategyId ? "编辑通知策略" : "新建通知策略"}
                 formRef={formRef}
                 drawerProps={
@@ -323,7 +323,7 @@ export default () => {
                         console.log(res)
                         message.success({
                             content: '编辑成功',
-                            getPopupContainer: (triggerNode: HTMLElement) => document.querySelector('#root-app-react')
+                            getPopupContainer: (triggerNode: HTMLElement) => document.querySelector('#root-app-react')!
                         });
                         strategyTableRef.current?.reload();
                         return true;
@@ -333,7 +333,7 @@ export default () => {
                         console.log(res)
                         message.success({
                             content: '创建成功',
-                            getPopupContainer: (triggerNode: HTMLElement) => document.querySelector('#root-app-react')
+                            getPopupContainer: (triggerNode: HTMLElement) => document.querySelector('#root-app-react')!
                         });
                         strategyTableRef.current?.reload();
                         return true;

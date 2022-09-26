@@ -8216,10 +8216,10 @@ q@^1.1.2:
   resolved "https://registry.yarnpkg.com/q/-/q-1.5.1.tgz#7e32f75b41381291d04611f1bf14109ac00651d7"
   integrity sha1-fjL3W0E4EpHQRhHxvxQQmsAGUdc=
 
-qiankun@^2.6.3:
-  version "2.6.3"
-  resolved "https://registry.npmmirror.com/qiankun/-/qiankun-2.6.3.tgz#00c55a3d6655b2a78b6e0578d70c694cdb662073"
-  integrity sha512-h1NIokwjdt508HNPcWBdzoYFDJvhbpUUlFSa5dDkpJYVCl55iqqHgdyi1YayinmLmr/9s/zD+WQv+A2mbzkMQw==
+qiankun@2.7.4:
+  version "2.7.4"
+  resolved "https://registry.npmmirror.com/qiankun/-/qiankun-2.7.4.tgz#53ad6a12f4d0ec0f1ef134b46102fa95c983d841"
+  integrity sha512-aihz6ue94CdalEBHBpJGD2UjY30Er0FEy8KxQuxCuEffOFvCXrvBsUm5UkfW32pu4AmAD/yB+lxad0Vzt6l5KQ==
   dependencies:
     "@babel/runtime" "^7.10.5"
     import-html-entry "^1.9.0"

@@ -23,5 +23,8 @@ module.exports = {
     ],
     "rules": {
         "react/display-name": "off"
+    },
+    "globals": {
+        "__webpack_public_path__": true
     }
 }

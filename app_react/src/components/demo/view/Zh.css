@@ -1,0 +1,13 @@
+.tree-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 200px;
+}
+.tree-title:hover .tree-node-controller {
+  visibility: visible;
+}
+.tree-title .tree-node-controller {
+  visibility: hidden;
+}
+/*# sourceMappingURL=Zh.css.map */

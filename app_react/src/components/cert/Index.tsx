@@ -53,15 +53,17 @@ export default () => {
                     console.log(res)
                     res.then(() => {
                         message.success({
+                            type: 'success',
                             content: '删除成功',
-                            getPopupContainer: (triggerNode: HTMLElement) => document.querySelector('#root-app-react')
+                            getPopupContainer: (triggerNode: HTMLElement) => document.querySelector('#root-app-react')!
                         });
                     });
                     res.catch((e) => {
                         console.log(e)
                         message.error({
+                            type: 'error',
                             content: '删除失败',
-                            getPopupContainer: (triggerNode: HTMLElement) => document.querySelector('#root-app-react')
+                            getPopupContainer: (triggerNode: HTMLElement) => document.querySelector('#root-app-react')!
                         });
                     });
                     certTableRef.current?.reload();

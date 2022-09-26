@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import "core-js/stable";
 import "regenerator-runtime/runtime";
 import './index.css';
+import Demo from './components/Demo';
 import Layout from './components/Layout';
 import reportWebVitals from './reportWebVitals';
 import { ConfigProvider } from 'antd';
@@ -97,7 +98,8 @@ function render(props: any) {
                 locale={currentLang}
                 messages={handleMessages(currentLang)}
             >
-                <Layout />
+                <Demo />
+                {/*<Layout />*/}
             </IntlProvider>
         </ConfigProvider>,
         // <Layout />,
@@ -106,11 +108,12 @@ function render(props: any) {
 }
 
 if (!(window as any).__POWERED_BY_QIANKUN__) {
-    if (process.env.NODE_ENV === "production") {
-        window.location.href = 'http://localhost:3080';  // 禁止单页访问，跳转基座
-    } else {
-        render({});
-    }
+    render({});
+    // if (process.env.NODE_ENV === "production") {
+    //     window.location.href = 'http://localhost:3080';  // 禁止单页访问，跳转基座
+    // } else {
+    //     render({});
+    // }
 }
 
 /**
