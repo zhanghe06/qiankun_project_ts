@@ -103,7 +103,7 @@ export default () => {
       },
     },
     {
-      title: '级别名称',
+      title: '场景对象',
       dataIndex: 'name',
       ellipsis: true,
       tooltip: '目录树会动态展示该级别',
@@ -264,7 +264,7 @@ export default () => {
           <Descriptions.Item label="业务分类">
             {segmentsMap.get(info?.segment)}
           </Descriptions.Item>
-          <Descriptions.Item label="级别名称">
+          <Descriptions.Item label="场景对象">
             {info?.name}
           </Descriptions.Item>
           <Descriptions.Item label="服务名称">
@@ -345,7 +345,7 @@ export default () => {
         <ProFormText
           width="sm"
           name="name"
-          label="级别名称"
+          label="场景对象"
           placeholder="请输入名称"
           rules={[{ required: true, message: '请输入名称!' }]}
         />

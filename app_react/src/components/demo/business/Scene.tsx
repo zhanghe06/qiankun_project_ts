@@ -11,7 +11,7 @@ import {
 } from '@ant-design/icons';
 import { Modal, Button, Descriptions, message, Space, Row, Col } from 'antd';
 import moment from 'moment';
-import { DrawerForm, ProFormInstance, ProFormSelect, ProFormText } from "@ant-design/pro-form";
+import { DrawerForm, ProFormInstance, ProFormSelect, ProFormSwitch, ProFormText, ProFormDependency } from "@ant-design/pro-form";
 
 export default () => {
   const tableRef = useRef<ActionType>();
@@ -77,6 +77,7 @@ export default () => {
     segment: number;
     code: string;
     name: string;
+    show_detail_st: boolean;
     level: number;
     created_at: number;
     deleted_at?: number;
@@ -148,7 +149,7 @@ export default () => {
       valueType: 'select',
       valueEnum: {
         0: {
-          text: '全部级别',
+          text: '-',
         },
         1: {
           text: '供应商',
@@ -157,6 +158,7 @@ export default () => {
           text: '客户',
         },
       },
+      hideInSearch: true
     },
     {
       title: '时间',
@@ -208,7 +210,7 @@ export default () => {
   }
 
   const levels = [
-    { label: '全部级别', value: 0 },
+    // { label: '-', value: 0 },
     { label: '供应商', value: 1 },
     { label: '客户', value: 2 },
   ]
@@ -233,6 +235,7 @@ export default () => {
                 segment: 1,
                 code: 'scene_purchase_to_pay',
                 name: `采购到付款`,
+                show_detail_st: true,
                 level: 1,
                 created_at: 1602572994055,
               },
@@ -242,6 +245,7 @@ export default () => {
                 segment: 1,
                 code: 'scene_purchase_to_storage',
                 name: `采购到入库`,
+                show_detail_st: false,
                 level: 0,
                 created_at: 1602572995055,
               },
@@ -307,7 +311,7 @@ export default () => {
             {info?.name}
           </Descriptions.Item>
           <Descriptions.Item label="明细级别">
-            {levelsMap.get(info?.level)}
+            {levelsMap.get(info?.level) || "-"}
           </Descriptions.Item>
           <Descriptions.Item label="创建时间">
             {info?.created_at ? moment(info?.created_at).format('YYYY-MM-DD HH:mm:ss') : ""}
@@ -320,6 +324,8 @@ export default () => {
         segment: number
         code: string
         name: string
+        show_detail_st: boolean
+        level: number
         created_at?: string
       }>
         name="recordForm"
@@ -406,17 +412,33 @@ export default () => {
           placeholder="请输入场景名称"
           rules={[{ required: true, message: '请输入场景名称!' }]}
         />
-        <ProFormSelect
+        <ProFormSwitch
           width="sm"
-          name="level"
-          label="明细级别"
-          fieldProps={{
-            labelInValue: true,
-          }}
-          request={async () => levels}
-          placeholder="请选择级别"
-          rules={[{ required: true, message: '请选择级别!' }]}
+          name="show_detail_st"
+          label="展示明细"
+          initialValue={false}
+          rules={[{ required: true, message: '请选择状态!' }]}
         />
+        <ProFormDependency name={['show_detail_st']}>
+          {({ show_detail_st }) => {
+            if (show_detail_st === false) {
+              return
+            }
+            return (
+              <ProFormSelect
+                width="sm"
+                name="level"
+                label="明细级别"
+                fieldProps={{
+                  labelInValue: true,
+                }}
+                request={async () => [{ label: '请选择级别', value: 0 }].concat(...levels)}
+                placeholder="请选择级别"
+                rules={[{ required: true, message: '请选择级别!' }]}
+              />
+            );
+          }}
+        </ProFormDependency>
       </DrawerForm>
     </>
   );

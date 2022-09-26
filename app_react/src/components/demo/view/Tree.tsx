@@ -9,7 +9,7 @@ import {
   CloseOutlined,
   PlusOutlined
 } from '@ant-design/icons';
-import { Modal, Button, Descriptions, message, Space, Row, Col, Switch, Card, Tree } from 'antd';
+import { Modal, Button, Descriptions, message, Space, Row, Col, Switch, Card, Tree, TreeSelect } from 'antd';
 import moment from 'moment';
 import {
   DrawerForm,
@@ -21,6 +21,7 @@ import {
   ProFormCascader
 } from "@ant-design/pro-form";
 import type { DataNode } from 'antd/es/tree';
+import layout from "../../Layout";
 
 export default () => {
   const tableRef = useRef<ActionType>();
@@ -84,7 +85,14 @@ export default () => {
     id: number;
     code: string;
     name: string;
-    tree: {variant_type: number, variant: number}[];
+    node_first: number[];
+    node_second: number[];
+    node_third: {
+      leaf: number[]
+    }[];
+    // node_second: {variant_type: number, variant: number};
+    // node_third: {variant_type: number, variant: number}[];
+    // tree: {variant_type: number, variant: number}[];
     created_at: number;
     deleted_at?: number;
   };
@@ -99,6 +107,27 @@ export default () => {
       title: '目录名称',
       dataIndex: 'name',
       ellipsis: true,
+    },
+    {
+      title: '一级目录',
+      dataIndex: 'node_first',
+      ellipsis: true,
+      hideInSearch: true,
+      hideInTable: true,
+    },
+    {
+      title: '二级目录',
+      dataIndex: 'node_second',
+      ellipsis: true,
+      hideInSearch: true,
+      hideInTable: true,
+    },
+    {
+      title: '三级目录',
+      dataIndex: 'node_third',
+      ellipsis: true,
+      hideInSearch: true,
+      hideInTable: true,
     },
     {
       title: '时间',
@@ -130,7 +159,7 @@ export default () => {
     children?: Option[];
   }
 
-  const options: Option[] = [
+  const optionsMain: Option[] = [
     {
       value: 1,
       label: '时间变式',
@@ -163,6 +192,9 @@ export default () => {
         },
       ],
     },
+  ];
+
+  const optionsBranch: Option[] = [
     {
       value: 3,
       label: '流程变式',
@@ -175,6 +207,22 @@ export default () => {
         {
           value: 2,
           label: '销售流程变式',
+          children: [],
+        },
+      ],
+    },
+    {
+      value: 4,
+      label: '业务库',
+      children: [
+        {
+          value: 1,
+          label: '采购业务库',
+          children: [],
+        },
+        {
+          value: 2,
+          label: '销售业务库',
           children: [],
         },
       ],
@@ -336,6 +384,24 @@ export default () => {
     wrapperCol: {span: 12},
   };
 
+  const handleNodeFirstChange = (e: any) => {
+    console.log(e)
+  }
+
+  const handleNodeSecondChange = (e: any) => {
+    console.log(e)
+  }
+
+  const handleNodeThirdLeafChange = (e: any) => {
+    console.log(e)
+  }
+
+  const handleMetaChange = (e: any) => {
+    console.log(e)
+  }
+
+
+
   return (
     <>
       <ProTable<Item>
@@ -349,22 +415,18 @@ export default () => {
                 id: 1,
                 code: 'v_tree_year_branch_purchase',
                 name: '年度分公司采购目录',
-                tree: [
-                  {variant_type:1, variant: 2, tree_node: [1, 2]},
-                  {variant_type:2, variant: 1, tree_node: [2, 2]},
-                  {variant_type:3, variant: 1, tree_node: [3, 1]},
-                ],
+                node_first: [1, 2],
+                node_second: [2, 1],
+                node_third: [{leaf: [3, 1]}],
                 created_at: 1602572994055,
               },
               {
                 id: 2,
                 code: 'v_tree_group_quarter_purchase',
                 name: '总公司季度采购目录',
-                tree: [
-                  {variant_type:2, variant: 2, tree_node: [2, 1]},
-                  {variant_type:1, variant: 1, tree_node: [1, 1]},
-                  {variant_type:3, variant: 1, tree_node: [3, 1]},
-                ],
+                node_first: [2, 2],
+                node_second: [1, 1],
+                node_third: [{leaf: [3, 1]}],
                 created_at: 1602572995055,
               },
             ],
@@ -436,8 +498,13 @@ export default () => {
       </Modal>
       <DrawerForm<{
         id?: number
+        code: string
         name: string
-        variant: number
+        node_first: number[]
+        node_second: number[]
+        node_third: {
+          leaf: number[]
+        }[]
         created_at?: string
       }>
         name="recordForm"
@@ -502,9 +569,41 @@ export default () => {
           placeholder="请输入变式名称"
           rules={[{ required: true, message: '请填写变式名称!' }]}
         />
+        {/*<ProFormSelect*/}
+        <ProFormCascader
+          width="sm"
+          name="node_first"
+          label="一级目录"
+          fieldProps={{
+            // labelInValue: true,
+            options: optionsMain,
+            onChange: handleNodeFirstChange
+          }}
+          // request={async () => segments}
+          placeholder="请选择目录"
+          rules={[{ required: true, message: '请选择目录!' }]}
+        />
+        {/*<ProFormSelect*/}
+        <ProFormCascader
+          width="sm"
+          name="node_second"
+          label="二级目录"
+          fieldProps={{
+            // labelInValue: true,
+            options: optionsMain,
+            onChange: handleNodeSecondChange
+          }}
+          {...{
+            labelCol: {span: 6},
+            wrapperCol: {span: 12},
+          }}
+          // request={async () => segments}
+          placeholder="请选择目录"
+          rules={[{ required: true, message: '请选择目录!' }]}
+        />
         <ProFormList
-          name="tree"
-          label="目录结构"
+          name="node_third"
+          label="三级目录"
           rules={[
             {
               validator: async (_, value) => {
@@ -519,19 +618,37 @@ export default () => {
           creatorButtonProps={{
             position: 'bottom',
           }}
+          {...{
+            labelCol: {span: 8},
+            wrapperCol: {span: 12},
+          }}
+          initialValue={[{}]}
         >
+          {/*<ProFormSelect*/}
           <ProFormCascader
             width="sm"
-            name="tree_node"
-            label="变式名称"
+            name="leaf"
+            label=""
             fieldProps={{
-              options: options,
+              options: optionsBranch,
+              // onChange: handleNodeThirdLeafChange
             }}
             // request={async () => segments}
             placeholder="请选择变式"
             rules={[{ required: true, message: '请选择变式!' }]}
+            onMetaChange={handleMetaChange}
           />
         </ProFormList>
+        <ProFormText
+          width="sm"
+          label="目录预览"
+        >
+          <Tree
+            showLine={true}
+            defaultExpandedKeys={['0-0-0']}
+            treeData={info?.id === 1 ? treeData01 : treeData02}
+          />
+        </ProFormText>
       </DrawerForm>
     </>
   );

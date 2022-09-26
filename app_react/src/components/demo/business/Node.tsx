@@ -11,7 +11,15 @@ import {
 } from '@ant-design/icons';
 import { Modal, Button, Descriptions, message, Space, Row, Col, Switch, Transfer } from 'antd';
 import moment from 'moment';
-import { DrawerForm, ProFormInstance, ProFormSelect, ProFormSwitch, ProFormText, ProFormCheckbox } from "@ant-design/pro-form";
+import {
+  DrawerForm,
+  ProFormInstance,
+  ProFormSelect,
+  ProFormSwitch,
+  ProFormText,
+  ProFormCheckbox,
+  ProFormDependency
+} from "@ant-design/pro-form";
 
 export default () => {
   const tableRef = useRef<ActionType>();
@@ -91,6 +99,7 @@ export default () => {
     code: string;
     name: string;
     system_st: number;
+    repo: number;
     service: number;
     display_field: string[]
     created_at: number;
@@ -142,7 +151,7 @@ export default () => {
       valueType: 'select',
       valueEnum: {
         0: {
-          text: '全部服务',
+          text: '-',
         },
         1: {
           text: <>capp_purchase_inquire<br/>采购询价服务</>,
@@ -157,6 +166,26 @@ export default () => {
           text: <>capp_purchase_invoice<br/>进项发票服务</>,
         },
       },
+      hideInSearch: true,
+    },
+    {
+      title: '业务库',
+      dataIndex: 'repo',
+      initialValue: '0',
+      ellipsis: true,
+      valueType: 'select',
+      valueEnum: {
+        0: {
+          text: '-',
+        },
+        1: {
+          text: <>采购业务库<br/><span color="#cccccc">(/业务库/采购)</span></>,
+        },
+        2: {
+          text: <>销售业务库<br/><span color="#cccccc">(/业务库/销售)</span></>,
+        },
+      },
+      hideInSearch: true,
     },
     {
       dataIndex: 'display_field',
@@ -165,6 +194,7 @@ export default () => {
       render: (_, record) => {
         return record.display_field && record.display_field.length > 0 ? record.display_field.join('、') : '无';
       },
+      hideInSearch: true,
     },
     // {
     //   dataIndex: 'display_field',
@@ -212,6 +242,16 @@ export default () => {
   const scenesMap = new Map()
   for (const item of scenes) {
     scenesMap.set(item.value, item.label)
+  }
+
+  const repos = [
+    { label: <>采购业务库<br/><span color="#cccccc">(/业务库/采购)</span></>, value: 1 },
+    { label: <>销售业务库<br/><span color="#cccccc">(/业务库/销售)</span></>, value: 2 },
+  ]
+
+  const reposMap = new Map()
+  for (const item of repos) {
+    reposMap.set(item.value, item.label)
   }
 
   const services = [
@@ -381,7 +421,8 @@ export default () => {
                 code: 'node_purchase_inquire',
                 name: '采购询价',
                 system_st: 0,
-                service: 1,
+                repo: 1,
+                service: 0,
                 display_field: [],
                 created_at: 1602572994055,
               },
@@ -391,6 +432,7 @@ export default () => {
                 code: 'node_purchase_order',
                 name: '采购订单',
                 system_st: 1,
+                repo: 0,
                 service: 2,
                 display_field: [
                   'code',
@@ -405,6 +447,7 @@ export default () => {
                 code: 'node_purchase_storage',
                 name: '采购入库',
                 system_st: 1,
+                repo: 0,
                 service: 3,
                 display_field: [
                   'warehouse',
@@ -419,6 +462,7 @@ export default () => {
                 code: 'node_purchase_invoice',
                 name: '采购发票',
                 system_st: 1,
+                repo: 0,
                 service: 4,
                 display_field: [
                   'invoice',
@@ -486,7 +530,7 @@ export default () => {
             {info?.name}
           </Descriptions.Item>
           <Descriptions.Item label="服务名称">
-            {servicesMap.get(info?.service)}
+            {info?.system_st == 1 ? servicesMap.get(info?.service) : reposMap.get(info?.repo)}
           </Descriptions.Item>
           <Descriptions.Item label="显示字段">
             {info?.display_field && info?.display_field.length > 0 ? info?.display_field.join('、') : '无'}
@@ -585,48 +629,75 @@ export default () => {
           initialValue={1}
           rules={[{ required: true, message: '请选择状态!' }]}
         />
-        <ProFormSelect
-          width="sm"
-          name="service"
-          label="服务名称"
-          fieldProps={{
-            labelInValue: true,
-            onChange: handleServiceChange,
-            // optionItemRender(item) {
-            //   return item.label + ' - ' + item.value;
-            // },
+        <ProFormDependency name={['system_st']}>
+          {({ system_st }) => {
+            if (system_st === 0 || system_st === false) {
+              return (
+                <ProFormSelect
+                  width="sm"
+                  name="repo"
+                  label="业务库"
+                  fieldProps={{
+                    labelInValue: true,
+                    // optionItemRender(item) {
+                    //   return item.label + ' - ' + item.value;
+                    // },
+                  }}
+                  request={async () => repos}
+                  placeholder="请选择业务库"
+                  rules={[{ required: true, message: '请选业务库!' }]}
+                />
+              )
+            }
+            if (system_st === 1 || system_st === true) {
+              return (
+                <>
+                  <ProFormSelect
+                    width="sm"
+                    name="service"
+                    label="服务名称"
+                    fieldProps={{
+                      labelInValue: true,
+                      onChange: handleServiceChange,
+                      // optionItemRender(item) {
+                      //   return item.label + ' - ' + item.value;
+                      // },
+                    }}
+                    request={async () => [{ label: <>请选择服务</>, value: 0 }].concat(...services)}
+                    placeholder="请选择服务"
+                    rules={[{ required: true, message: '请选择服务!' }]}
+                  />
+                  <ProFormCheckbox.Group
+                    name="display_field"
+                    label="显示字段"
+                    options={[]}
+                    rules={[{ required: true, message: '请选择字段!' }]}
+                  >
+                    <Transfer
+                      dataSource={displayFields}
+                      showSearch
+                      style={
+                        {
+                          width: 444,
+                        }
+                      }
+                      listStyle={
+                        {
+                          width: 222,
+                          height: 300,
+                        }
+                      }
+                      operations={['显示', '取消']}
+                      targetKeys={targetKeys}
+                      onChange={handleChange}
+                      render={item => `${item.title}`}
+                    />
+                  </ProFormCheckbox.Group>
+                </>
+              )
+            }
           }}
-          request={async () => services}
-          placeholder="请选择服务"
-          rules={[{ required: true, message: '请选择服务!' }]}
-        />
-        <ProFormCheckbox.Group
-          name="display_field"
-          label="显示字段"
-          options={[]}
-          rules={[{ required: true, message: '请选择字段!' }]}
-        >
-          <Transfer
-            dataSource={displayFields}
-            showSearch
-            style={
-              {
-                width: 444,
-              }
-            }
-            listStyle={
-              {
-                width: 222,
-                height: 300,
-              }
-            }
-            operations={['显示', '取消']}
-            targetKeys={targetKeys}
-            onChange={handleChange}
-            render={item => `${item.title}`}
-          />
-        </ProFormCheckbox.Group>
-
+        </ProFormDependency>
       </DrawerForm>
     </>
   );
