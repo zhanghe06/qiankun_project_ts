@@ -111,22 +111,22 @@ export default () => {
       dataIndex: 'name',
       ellipsis: true,
     },
-    {
-      title: '公司代码',
-      dataIndex: 'org_code',
-      ellipsis: true,
-    },
-    {
-      title: '公司名称',
-      dataIndex: 'org_name',
-      ellipsis: true,
-    },
-    {
-      title: '公司简称',
-      dataIndex: 'org_short_name',
-      ellipsis: true,
-      hideInSearch: true,
-    },
+    // {
+    //   title: '公司代码',
+    //   dataIndex: 'org_code',
+    //   ellipsis: true,
+    // },
+    // {
+    //   title: '公司名称',
+    //   dataIndex: 'org_name',
+    //   ellipsis: true,
+    // },
+    // {
+    //   title: '公司简称',
+    //   dataIndex: 'org_short_name',
+    //   ellipsis: true,
+    //   hideInSearch: true,
+    // },
     {
       title: '启用分公司',
       dataIndex: 'enabled_branch',
@@ -259,15 +259,15 @@ export default () => {
           <Descriptions.Item label="变式名称">
             {info?.name}
           </Descriptions.Item>
-          <Descriptions.Item label="公司代码">
-            {info?.org_code}
-          </Descriptions.Item>
-          <Descriptions.Item label="公司名称">
-            {info?.org_name}
-          </Descriptions.Item>
-          <Descriptions.Item label="公司简称">
-            {info?.org_short_name}
-          </Descriptions.Item>
+          {/*<Descriptions.Item label="公司代码">*/}
+          {/*  {info?.org_code}*/}
+          {/*</Descriptions.Item>*/}
+          {/*<Descriptions.Item label="公司名称">*/}
+          {/*  {info?.org_name}*/}
+          {/*</Descriptions.Item>*/}
+          {/*<Descriptions.Item label="公司简称">*/}
+          {/*  {info?.org_short_name}*/}
+          {/*</Descriptions.Item>*/}
           <Descriptions.Item label="启用分部">
             {info?.enabled_branch === 1 ? '启用' : '无'}
           </Descriptions.Item>
@@ -350,6 +350,11 @@ export default () => {
           placeholder="请输入变式名称"
           rules={[{ required: true, message: '请填写变式名称!' }]}
         />
+        <ProFormSwitch
+          width="sm"
+          name="enabled_branch"
+          label="是否启用分部"
+        />
         <ProFormText
           width="sm"
           name="org_name"
@@ -364,12 +369,94 @@ export default () => {
           name="org_short_name"
           label="公司简称"
           placeholder="请输入公司简称"
+          initialValue={'上海爱数信息技术股份有限公司'}
           rules={[{ required: true, message: '请填写公司简称!' }]}
         />
-        <ProFormSwitch
+        <ProFormDependency name={['enabled_branch']}>
+          {() => {
+            if (!orgBranchVisit) {
+              return
+            }
+            return (
+              <ProFormList
+                name="org_branches"
+                label="分部信息"
+                rules={[
+                  {
+                    validator: async (_, value) => {
+                      console.log(value);
+                      if (value && value.length > 0) {
+                        return;
+                      }
+                      throw new Error('至少填写一项分部信息！');
+                    },
+                  },
+                ]}
+                creatorButtonProps={false}
+                // creatorButtonProps={{
+                //   position: 'bottom',
+                // }}
+                initialValue={[
+                  {
+                    org_branch_name: '成都客服中心',
+                    org_branch_short_name: '成都客服中心',
+                  },
+                  {
+                    org_branch_name: '上海研发中心',
+                    org_branch_short_name: '上海研发中心',
+                  },
+                  {
+                    org_branch_name: '北京销售中心',
+                    org_branch_short_name: '北京销售中心',
+                  },
+                ]}
+                itemContainerRender={(doms) => {
+                  return <ProForm.Group>{doms}</ProForm.Group>;
+                }}
+                {...{
+                  labelCol: {span: 4},
+                  wrapperCol: {span: 16},
+                }}
+              >
+                <ProFormText
+                  width="sm"
+                  key="org_branch_name"
+                  name="org_branch_name"
+                  // label="名称"
+                  placeholder="请选择分部名称"
+                  disabled={true}
+                  rules={[{ required: true, message: '请填写分部名称!' }]}
+                />
+                <ProFormText
+                  width="xs"
+                  key="org_branch_short_name"
+                  name="org_branch_short_name"
+                  // label="简称"
+                  placeholder="简称"
+                  rules={[{ required: true, message: '请填写简称!' }]}
+                />
+                {/*<Divider/>*/}
+              </ProFormList>
+            );
+          }}
+        </ProFormDependency>
+        <Divider/>
+        <ProFormText
           width="sm"
-          name="enabled_branch"
-          label="启用分部"
+          name="org_name"
+          label="公司名称"
+          placeholder="请选择公司名称"
+          initialValue={'上海爱数信息技术股份有限公司'}
+          disabled={true}
+          rules={[{ required: true, message: '请选择公司名称!' }]}
+        />
+        <ProFormText
+          width="sm"
+          name="org_short_name"
+          label="公司简称"
+          placeholder="请输入公司简称"
+          initialValue={'上海爱数信息技术股份有限公司'}
+          rules={[{ required: true, message: '请填写公司简称!' }]}
         />
         <ProFormDependency name={['enabled_branch']}>
           {() => {

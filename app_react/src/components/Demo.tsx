@@ -106,24 +106,24 @@ export default () => {
           defaultActiveKey="1"
           onChange={callback}
           items={[
+            {
+              label: `场景分类`,
+              key: '1',
+              children: <BusinessSegment/>,
+            },
             // {
-            //   label: `业务分类`,
-            //   key: '1',
-            //   children: <BusinessSegment/>,
+            //   label: `场景对象服务`,
+            //   key: '2',
+            //   children: <BusinessLevel/>,
             // },
             {
-              label: `场景对象服务`,
-              key: '1',
-              children: <BusinessLevel/>,
-            },
-            {
               label: `业务场景`,
-              key: '2',
+              key: '3',
               children: <BusinessScene/>,
             },
             {
               label: `业务节点`,
-              key: '3',
+              key: '4',
               children: <BusinessNode/>,
             },
           ]}

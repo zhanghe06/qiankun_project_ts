@@ -103,7 +103,7 @@ export default () => {
     //   },
     // },
     {
-      title: '业务分类',
+      title: '场景分类',
       dataIndex: 'segment',
       initialValue: '0',
       ellipsis: true,
@@ -113,10 +113,10 @@ export default () => {
           text: '全部分类',
         },
         1: {
-          text: '采购',
+          text: '生产采购',
         },
         2: {
-          text: '销售',
+          text: '通用采购',
         },
       },
     },
@@ -189,19 +189,19 @@ export default () => {
     wrapperCol: {span: 12},
   };
 
-  const groups = [
-    { label: '采购管理', value: 1 },
-    { label: '销售管理', value: 2 },
-  ]
-
-  const groupsMap = new Map()
-  for (const item of groups) {
-    groupsMap.set(item.value, item.label)
-  }
+  // const groups = [
+  //   { label: '采购管理', value: 1 },
+  //   { label: '销售管理', value: 2 },
+  // ]
+  //
+  // const groupsMap = new Map()
+  // for (const item of groups) {
+  //   groupsMap.set(item.value, item.label)
+  // }
 
   const segments = [
-    { label: '采购', value: 1 },
-    { label: '销售', value: 2 },
+    { label: '生产采购', value: 1 },
+    { label: '通用采购', value: 2 },
   ]
 
   const segmentsMap = new Map()
@@ -301,7 +301,7 @@ export default () => {
           {/*<Descriptions.Item label="业务分组">*/}
           {/*  {groupsMap.get(info?.group)}*/}
           {/*</Descriptions.Item>*/}
-          <Descriptions.Item label="业务分类">
+          <Descriptions.Item label="场景分类">
             {segmentsMap.get(info?.segment)}
           </Descriptions.Item>
           <Descriptions.Item label="场景编号">
@@ -320,7 +320,6 @@ export default () => {
       </Modal>
       <DrawerForm<{
         id?: number
-        group: number
         segment: number
         code: string
         name: string
@@ -390,7 +389,7 @@ export default () => {
         <ProFormSelect
           width="sm"
           name="segment"
-          label="业务分类"
+          label="场景分类"
           fieldProps={{
             labelInValue: true,
           }}

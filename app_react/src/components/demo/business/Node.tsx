@@ -18,7 +18,7 @@ import {
   ProFormSwitch,
   ProFormText,
   ProFormCheckbox,
-  ProFormDependency
+  ProFormDependency, ProFormCascader, ProForm, ProFormList
 } from "@ant-design/pro-form";
 
 export default () => {
@@ -187,15 +187,15 @@ export default () => {
       },
       hideInSearch: true,
     },
-    {
-      dataIndex: 'display_field',
-      title: '显示字段',
-      ellipsis: true,
-      render: (_, record) => {
-        return record.display_field && record.display_field.length > 0 ? record.display_field.join('、') : '无';
-      },
-      hideInSearch: true,
-    },
+    // {
+    //   dataIndex: 'display_field',
+    //   title: '显示字段',
+    //   ellipsis: true,
+    //   render: (_, record) => {
+    //     return record.display_field && record.display_field.length > 0 ? record.display_field.join('、') : '无';
+    //   },
+    //   hideInSearch: true,
+    // },
     // {
     //   dataIndex: 'display_field',
     //   title: '限定条件',
@@ -372,6 +372,67 @@ export default () => {
         {
           value: 'invoice',
           label: '发票编号',
+          children: [],
+        },
+      ],
+    },
+  ];
+
+  const businessGroupOptions: Option[] = [
+    {
+      value: 1,
+      label: '基础信息',
+      children: [
+        {
+          value: 1,
+          label: '货币',
+          children: [],
+        },
+        {
+          value: 2,
+          label: '国家',
+          children: [],
+        },
+        {
+          value: 3,
+          label: '地区',
+          children: [],
+        },
+      ],
+    },
+    {
+      value: 2,
+      label: '主数据',
+      children: [
+        {
+          value: 1,
+          label: '公司',
+          children: [],
+        },
+        {
+          value: 2,
+          label: '工厂',
+          children: [],
+        },
+        {
+          value: 3,
+          label: '组织',
+          children: [],
+        },
+      ],
+    },
+    {
+      value: 3,
+      label: '业务数据',
+      children: [
+        {
+          value: 1,
+          label: '采购申请',
+          children: [],
+        },
+        {
+          value: 2,
+          label: '采购订单',
           children: [],
         },
       ],
@@ -652,6 +713,17 @@ export default () => {
             if (system_st === 1 || system_st === true) {
               return (
                 <>
+                  <ProFormCascader
+                    width="sm"
+                    name="group_segment"
+                    label="业务组"
+                    fieldProps={{
+                      options: businessGroupOptions,
+                    }}
+                    // request={async () => segments}
+                    placeholder="请选择业务组"
+                    rules={[{ required: true, message: '请选择业务组!' }]}
+                  />
                   <ProFormSelect
                     width="sm"
                     name="service"
@@ -693,6 +765,86 @@ export default () => {
                       render={item => `${item.title}`}
                     />
                   </ProFormCheckbox.Group>
+                  <ProFormList
+                    name="filters"
+                    label="筛选条件"
+                    // creatorButtonProps={false}
+                    creatorButtonProps={{
+                      position: 'bottom',
+                    }}
+                    initialValue={[
+                      {
+                        code: 'order_id',
+                        name: '订单编号',
+                        type: '文本框',
+                        param: 'purchase_order_id',
+                        required: false,
+                      },
+                      {
+                        code: 'order_status',
+                        name: '订单状态',
+                        type: '下拉列表',
+                        param: 'purchase_order_status',
+                        required: false,
+                      },
+                    ]}
+                    itemContainerRender={(doms) => {
+                      return <ProForm.Group>{doms}</ProForm.Group>;
+                    }}
+                    max={4}
+                    {...{
+                      labelCol: {span: 4},
+                      wrapperCol: {span: 20},
+                    }}
+                  >
+                    <ProFormText
+                      width="xs"
+                      key="code"
+                      name="code"
+                      // label="名称"
+                      placeholder="字段"
+                      // disabled={true}
+                      rules={[{ required: true, message: '请选择字段!' }]}
+                    />
+                    <ProFormText
+                      width="xs"
+                      key="name"
+                      name="name"
+                      // label="名称"
+                      placeholder="字段"
+                      disabled={true}
+                      rules={[{ required: true, message: '请选择字段!' }]}
+                    />
+                    <ProFormSelect
+                      width="xs"
+                      name="type"
+                      label=""
+                      fieldProps={{
+                        labelInValue: true,
+                      }}
+                      request={async () => [
+                        { label: '文本框', value: '文本框' },
+                        { label: '下拉列表', value: '下拉列表' },
+                      ]}
+                      placeholder="类型"
+                      rules={[{ required: true, message: '请选择类型!' }]}
+                    />
+                    <ProFormText
+                      width="xs"
+                      key="param"
+                      name="param"
+                      placeholder="参数"
+                      rules={[{ required: true, message: '请填写参数!' }]}
+                    />
+                    <ProFormCheckbox
+                      width="xs"
+                      key="required"
+                      name="required"
+                      label="必填"
+                      placeholder="必填"
+                    />
+                    {/*<Divider/>*/}
+                  </ProFormList>
                 </>
               )
             }

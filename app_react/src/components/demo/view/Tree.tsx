@@ -637,6 +637,7 @@ export default () => {
             placeholder="请选择变式"
             rules={[{ required: true, message: '请选择变式!' }]}
             onMetaChange={handleMetaChange}
+            tooltip="流程只能够选一个，可以添加业务库"
           />
         </ProFormList>
         <ProFormText
