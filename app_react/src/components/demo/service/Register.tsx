@@ -127,12 +127,12 @@ export default () => {
       hideInSearch: true,
     },
     {
-      title: '服务名称',
+      title: '服务编号',
       dataIndex: 'name',
       ellipsis: true,
     },
     {
-      title: '服务描述',
+      title: '服务名称',
       dataIndex: 'note',
       ellipsis: true,
     },
@@ -319,10 +319,10 @@ export default () => {
           <Descriptions.Item label="服务分类">
             {info && getOptionLabels(info?.group, info?.segment)}
           </Descriptions.Item>
-          <Descriptions.Item label="服务名称">
+          <Descriptions.Item label="服务编号">
             {info?.name}
           </Descriptions.Item>
-          <Descriptions.Item label="服务描述">
+          <Descriptions.Item label="服务名称">
             {info?.note}
           </Descriptions.Item>
           <Descriptions.Item label="创建时间">
@@ -401,19 +401,19 @@ export default () => {
         <ProFormText
           width="sm"
           name="name"
-          label="服务名称"
-          placeholder="请输入名称"
+          label="服务编号"
+          placeholder="请输入编号"
           rules={[
-            { required: true, message: '请输入名称!' },
+            { required: true, message: '请输入编号!' },
             { pattern: /^\w+$/, message: '仅仅支持英文、数字或下划线!' },
           ]}
         />
         <ProFormText
           width="sm"
           name="note"
-          label="服务描述"
-          placeholder="请输入描述"
-          rules={[{ required: true, message: '请输入描述!' }]}
+          label="服务名称"
+          placeholder="请输入名称"
+          rules={[{ required: true, message: '请输入名称!' }]}
         />
       </DrawerForm>
     </>

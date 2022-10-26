@@ -74,10 +74,10 @@ export default () => {
   type Item = {
     id: number;
     // group: number;
-    segment: number;
     code: string;
     name: string;
     show_detail_st: boolean;
+    segment: number;
     level: number;
     created_at: number;
     deleted_at?: number;
@@ -103,24 +103,6 @@ export default () => {
     //   },
     // },
     {
-      title: '场景分类',
-      dataIndex: 'segment',
-      initialValue: '0',
-      ellipsis: true,
-      valueType: 'select',
-      valueEnum: {
-        0: {
-          text: '全部分类',
-        },
-        1: {
-          text: '生产采购',
-        },
-        2: {
-          text: '通用采购',
-        },
-      },
-    },
-    {
       title: '场景编号',
       dataIndex: 'code',
       ellipsis: true,
@@ -140,6 +122,24 @@ export default () => {
           {record.code}<br/>{record.name}
         </>
       ),
+    },
+    {
+      title: '场景对象分类',
+      dataIndex: 'segment',
+      initialValue: '0',
+      ellipsis: true,
+      valueType: 'select',
+      valueEnum: {
+        0: {
+          text: '-',
+        },
+        1: {
+          text: '生产采购',
+        },
+        2: {
+          text: '通用采购',
+        },
+      },
     },
     {
       title: '明细级别',
@@ -242,7 +242,7 @@ export default () => {
               {
                 id: 2,
                 // group: 1,
-                segment: 1,
+                segment: 0,
                 code: 'scene_purchase_to_storage',
                 name: `采购到入库`,
                 show_detail_st: false,
@@ -301,7 +301,7 @@ export default () => {
           {/*<Descriptions.Item label="业务分组">*/}
           {/*  {groupsMap.get(info?.group)}*/}
           {/*</Descriptions.Item>*/}
-          <Descriptions.Item label="场景分类">
+          <Descriptions.Item label="场景对象分类">
             {segmentsMap.get(info?.segment)}
           </Descriptions.Item>
           <Descriptions.Item label="场景编号">
@@ -320,10 +320,10 @@ export default () => {
       </Modal>
       <DrawerForm<{
         id?: number
-        segment: number
         code: string
         name: string
         show_detail_st: boolean
+        segment: number
         level: number
         created_at?: string
       }>
@@ -386,17 +386,6 @@ export default () => {
         {/*  placeholder="请选择分组"*/}
         {/*  rules={[{ required: true, message: '请选择分组!' }]}*/}
         {/*/>*/}
-        <ProFormSelect
-          width="sm"
-          name="segment"
-          label="场景分类"
-          fieldProps={{
-            labelInValue: true,
-          }}
-          request={async () => segments}
-          placeholder="请选择分类"
-          rules={[{ required: true, message: '请选择分类!' }]}
-        />
         <ProFormText
           width="sm"
           name="code"
@@ -424,18 +413,31 @@ export default () => {
               return
             }
             return (
-              <ProFormSelect
-                width="sm"
-                name="level"
-                label="明细级别"
-                fieldProps={{
-                  labelInValue: true,
-                }}
-                request={async () => [{ label: '请选择级别', value: 0 }].concat(...levels)}
-                placeholder="请选择级别"
-                rules={[{ required: true, message: '请选择级别!' }]}
-              />
-            );
+              <>
+                <ProFormSelect
+                  width="sm"
+                  name="segment"
+                  label="场景对象分类"
+                  fieldProps={{
+                    labelInValue: true,
+                  }}
+                  request={async () => segments}
+                  placeholder="请选择分类"
+                  rules={[{ required: true, message: '请选择分类!' }]}
+                />
+                <ProFormSelect
+                  width="sm"
+                  name="level"
+                  label="明细级别"
+                  fieldProps={{
+                    labelInValue: true,
+                  }}
+                  request={async () => [{ label: '请选择级别', value: 0 }].concat(...levels)}
+                  placeholder="请选择级别"
+                  rules={[{ required: true, message: '请选择级别!' }]}
+                />
+              </>
+            )
           }}
         </ProFormDependency>
       </DrawerForm>

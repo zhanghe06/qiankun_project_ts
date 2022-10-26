@@ -797,24 +797,38 @@ export default () => {
                       wrapperCol: {span: 20},
                     }}
                   >
-                    <ProFormText
+                    <ProFormSelect
                       width="xs"
-                      key="code"
                       name="code"
-                      // label="名称"
+                      label=""
+                      fieldProps={{
+                        labelInValue: true,
+                      }}
+                      request={async () => [
+                        { label: '订单编号', value: 'order_id' },
+                        { label: '订单状态', value: 'order_status' },
+                      ]}
                       placeholder="字段"
-                      // disabled={true}
                       rules={[{ required: true, message: '请选择字段!' }]}
                     />
-                    <ProFormText
-                      width="xs"
-                      key="name"
-                      name="name"
-                      // label="名称"
-                      placeholder="字段"
-                      disabled={true}
-                      rules={[{ required: true, message: '请选择字段!' }]}
-                    />
+                    {/*<ProFormText*/}
+                    {/*  width="xs"*/}
+                    {/*  key="code"*/}
+                    {/*  name="code"*/}
+                    {/*  // label="名称"*/}
+                    {/*  placeholder="字段"*/}
+                    {/*  // disabled={true}*/}
+                    {/*  rules={[{ required: true, message: '请选择字段!' }]}*/}
+                    {/*/>*/}
+                    {/*<ProFormText*/}
+                    {/*  width="xs"*/}
+                    {/*  key="name"*/}
+                    {/*  name="name"*/}
+                    {/*  // label="名称"*/}
+                    {/*  placeholder="字段"*/}
+                    {/*  disabled={true}*/}
+                    {/*  rules={[{ required: true, message: '请选择字段!' }]}*/}
+                    {/*/>*/}
                     <ProFormSelect
                       width="xs"
                       name="type"
@@ -825,6 +839,8 @@ export default () => {
                       request={async () => [
                         { label: '文本框', value: '文本框' },
                         { label: '下拉列表', value: '下拉列表' },
+                        { label: '文本区间', value: '文本区间' },
+                        { label: '时间区间', value: '时间区间' },
                       ]}
                       placeholder="类型"
                       rules={[{ required: true, message: '请选择类型!' }]}

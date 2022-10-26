@@ -172,12 +172,12 @@ export default () => {
       ellipsis: true,
     },
     {
-      title: '服务名称',
+      title: '服务编号',
       dataIndex: 'name',
       ellipsis: true,
     },
     {
-      title: '服务描述',
+      title: '服务名称',
       dataIndex: 'note',
       ellipsis: true,
     },

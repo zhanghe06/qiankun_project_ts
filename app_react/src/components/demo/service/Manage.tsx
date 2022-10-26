@@ -10,7 +10,7 @@ import {
 import type { MenuProps } from 'antd';
 import { Button, Menu, Space, Layout, Row, Col, message, Modal } from 'antd';
 import ProTable, { ActionType, ProColumns } from "@ant-design/pro-table";
-import { DrawerForm, ProFormInstance, ProFormSelect, ProFormText } from "@ant-design/pro-form";
+import { DrawerForm, ProFormInstance, ProFormRadio, ProFormSelect, ProFormText } from "@ant-design/pro-form";
 const { Header, Content, Sider } = Layout;
 
 export default () => {
@@ -82,6 +82,7 @@ export default () => {
       id: 1,
       group: '业务数据',
       segment: '采购',
+      data_type: 1,
       name: 'capp_business_purchase_apply',
       note: '采购申请服务',
       created_at: 1602572994055,
@@ -90,6 +91,7 @@ export default () => {
       id: 2,
       group: '业务数据',
       segment: '采购',
+      data_type: 2,
       name: 'capp_business_purchase_order',
       note: '采购订单服务',
       created_at: 1602572995055,
@@ -163,6 +165,7 @@ export default () => {
     id: number;
     group: string;
     segment: string;
+    data_type: number;
     name: string;
     note: string;
     created_at: number;
@@ -200,12 +203,25 @@ export default () => {
       ellipsis: true,
     },
     {
-      title: '服务名称',
+      title: '数据类型',
+      dataIndex: 'data_type',
+      ellipsis: true,
+      valueEnum: {
+        1: {
+          text: '是主数据',
+        },
+        2: {
+          text: '非主数据',
+        },
+      },
+    },
+    {
+      title: '服务编号',
       dataIndex: 'name',
       ellipsis: true,
     },
     {
-      title: '服务描述',
+      title: '服务名称',
       dataIndex: 'note',
       ellipsis: true,
     },
@@ -297,6 +313,7 @@ export default () => {
           id?: number
           group: string
           segment: string
+          data_type: number
           name: string
           note: string
           created_at?: string
@@ -363,19 +380,36 @@ export default () => {
             disabled={true}
             initialValue="采购"
           />
+          <ProFormRadio.Group
+            width="sm"
+            name="data_type"
+            label="数据类型"
+            initialValue={2}
+            options={[
+              {
+                label: '是主数据',
+                value: 1,
+              },
+              {
+                label: '非主数据',
+                value: 2,
+              },
+            ]}
+            rules={[{ required: true, message: '请选择数据类型!' }]}
+          />
           <ProFormText
             width="sm"
             name="name"
-            label="服务名称"
-            placeholder="请输入名称"
-            rules={[{ required: true, message: '请输入名称!' }]}
+            label="服务编号"
+            placeholder="请输入编号"
+            rules={[{ required: true, message: '请输入编号!' }]}
           />
           <ProFormText
             width="sm"
             name="note"
-            label="服务描述"
-            placeholder="请输入描述"
-            rules={[{ required: true, message: '请输入描述!' }]}
+            label="服务名称"
+            placeholder="请输入名称"
+            rules={[{ required: true, message: '请输入名称!' }]}
           />
         </DrawerForm>
       </Content>

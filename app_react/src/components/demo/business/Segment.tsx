@@ -94,6 +94,7 @@ export default () => {
   type Item = {
     id: number;
     // group: number;
+    code: string;
     name: string;
     created_at: number;
     deleted_at?: number;
@@ -119,7 +120,12 @@ export default () => {
     //   },
     // },
     {
-      title: '场景分类',
+      title: '分类编号',
+      dataIndex: 'code',
+      ellipsis: true,
+    },
+    {
+      title: '分类名称',
       dataIndex: 'name',
       ellipsis: true,
     },
@@ -153,6 +159,7 @@ export default () => {
   type levelItem = {
     id: number;
     segment: number;
+    code: string;
     name: string;
     service: number;
     created_at: number;
@@ -260,12 +267,14 @@ export default () => {
               {
                 id: 1,
                 // group: 1,
+                code: `purchasing_production`,
                 name: `生产采购`,
                 created_at: 1602572994055,
               },
               {
                 id: 2,
                 // group: 1,
+                code: `purchasing_general`,
                 name: `通用采购`,
                 created_at: 1602572995055,
               },
@@ -322,7 +331,10 @@ export default () => {
           {/*<Descriptions.Item label="业务分组">*/}
           {/*  {groupsMap.get(info?.group)}*/}
           {/*</Descriptions.Item>*/}
-          <Descriptions.Item label="场景分类">
+          <Descriptions.Item label="分类编号">
+            {info?.code}
+          </Descriptions.Item>
+          <Descriptions.Item label="分类名称">
             {info?.name}
           </Descriptions.Item>
           <Descriptions.Item label="创建时间">
@@ -397,10 +409,17 @@ export default () => {
         {/*/>*/}
         <ProFormText
           width="sm"
+          name="code"
+          label="分类编号"
+          placeholder="请输入分类编号"
+          rules={[{ required: true, message: '请输入分类编号!' }]}
+        />
+        <ProFormText
+          width="sm"
           name="name"
-          label="场景分类"
-          placeholder="请输入分类"
-          rules={[{ required: true, message: '请输入分类!' }]}
+          label="分类名称"
+          placeholder="请输入分类名称"
+          rules={[{ required: true, message: '请输入分类名称!' }]}
         />
       </DrawerForm>
       <DrawerForm<{
@@ -462,15 +481,15 @@ export default () => {
         <ProFormText
           width="sm"
           name="segment"
-          label="场景分类"
+          label="分类名称"
           // fieldProps={{
           //   labelInValue: true,
           // }}
           // request={async () => segments}
           disabled={true}
-          placeholder="场景分类"
+          placeholder="分类名称"
           initialValue="生产采购"
-          rules={[{ required: true, message: '请填写场景分类!' }]}
+          rules={[{ required: true, message: '请填写场景对象分类!' }]}
         />
         <ProFormText
           width="sm"

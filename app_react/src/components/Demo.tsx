@@ -107,7 +107,7 @@ export default () => {
           onChange={callback}
           items={[
             {
-              label: `场景分类`,
+              label: `场景对象`,
               key: '1',
               children: <BusinessSegment/>,
             },
