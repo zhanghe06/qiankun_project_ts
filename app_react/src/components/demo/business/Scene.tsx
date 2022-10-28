@@ -9,9 +9,17 @@ import {
   CloseOutlined,
   PlusOutlined
 } from '@ant-design/icons';
-import { Modal, Button, Descriptions, message, Space, Row, Col } from 'antd';
+import { Modal, Button, Descriptions, message, Space, Row, Col, Transfer } from 'antd';
 import moment from 'moment';
-import { DrawerForm, ProFormInstance, ProFormSelect, ProFormSwitch, ProFormText, ProFormDependency } from "@ant-design/pro-form";
+import {
+  DrawerForm,
+  ProFormInstance,
+  ProFormSelect,
+  ProFormSwitch,
+  ProFormText,
+  ProFormDependency,
+  ProFormCheckbox
+} from "@ant-design/pro-form";
 
 export default () => {
   const tableRef = useRef<ActionType>();
@@ -21,6 +29,8 @@ export default () => {
   const [info, setInfo] = useState<Item>();
   const [recordId, setRecordId] = useState<number>(0);
   const [drawerVisit, setDrawerVisit] = useState(false);
+  const [nodes, setNodes] = useState<{key: string, title: string}[]>([]);
+  const [targetKeys, setTargetKeys] = useState<string[]>([]);
 
   const showInfo = async (record: Item) => {
     setIsInfoVisible(true);
@@ -43,12 +53,37 @@ export default () => {
     setDrawerVisit(visible);
   }
 
+  const handleChange = (newTargetKeys: string[]) => {
+    setTargetKeys(newTargetKeys);
+  };
+
   const editInfo = (record: Item) => {
     setRecordId(record.id);
     // console.log(record);
     // console.log(formRef.current);
     formRef.current?.setFieldsValue(record);
     // setTimeout(() => {formRef.current?.setFieldsValue(record)}, 0)
+
+
+    setNodes([
+      {
+        key: 'node_purchase_inquire',
+        title: '采购询价',
+      },
+      {
+        key: 'node_purchase_order',
+        title: '采购订单',
+      },
+      {
+        key: 'node_purchase_storage',
+        title: '采购入库',
+      },
+      {
+        key: 'node_purchase_invoice',
+        title: '采购发票',
+      },
+    ])
+
     setDrawerVisit(true);
   }
 
@@ -440,6 +475,32 @@ export default () => {
             )
           }}
         </ProFormDependency>
+        <ProFormCheckbox.Group
+          name="nodes"
+          label="绑定节点"
+          options={[]}
+          rules={[{ required: true, message: '请选择节点!' }]}
+        >
+          <Transfer
+            dataSource={nodes}
+            showSearch
+            style={
+              {
+                width: 444,
+              }
+            }
+            listStyle={
+              {
+                width: 222,
+                height: 300,
+              }
+            }
+            operations={['显示', '取消']}
+            targetKeys={targetKeys}
+            onChange={handleChange}
+            render={item => `${item.title}`}
+          />
+        </ProFormCheckbox.Group>
       </DrawerForm>
     </>
   );

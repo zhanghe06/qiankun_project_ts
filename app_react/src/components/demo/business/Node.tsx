@@ -95,7 +95,7 @@ export default () => {
 
   type Item = {
     id: number;
-    scene: number;
+    // scene: number;
     code: string;
     name: string;
     system_st: number;
@@ -107,24 +107,24 @@ export default () => {
   };
 
   const columns: ProColumns<Item>[] = [
-    {
-      title: '业务场景',
-      dataIndex: 'scene',
-      initialValue: '0',
-      ellipsis: true,
-      valueType: 'select',
-      valueEnum: {
-        0: {
-          text: <>全部场景</>,
-        },
-        1: {
-          text: <>scene_purchase_to_pay<br/>采购到付款</>,
-        },
-        2: {
-          text: <>scene_purchase_to_storage<br/>采购到入库</>,
-        },
-      },
-    },
+    // {
+    //   title: '业务场景',
+    //   dataIndex: 'scene',
+    //   initialValue: '0',
+    //   ellipsis: true,
+    //   valueType: 'select',
+    //   valueEnum: {
+    //     0: {
+    //       text: <>全部场景</>,
+    //     },
+    //     1: {
+    //       text: <>scene_purchase_to_pay<br/>采购到付款</>,
+    //     },
+    //     2: {
+    //       text: <>scene_purchase_to_storage<br/>采购到入库</>,
+    //     },
+    //   },
+    // },
     {
       title: '业务节点',
       ellipsis: true,
@@ -478,7 +478,7 @@ export default () => {
             data: [
               {
                 id: 1,
-                scene: 1,
+                // scene: 1,
                 code: 'node_purchase_inquire',
                 name: '采购询价',
                 system_st: 0,
@@ -489,7 +489,7 @@ export default () => {
               },
               {
                 id: 2,
-                scene: 1,
+                // scene: 1,
                 code: 'node_purchase_order',
                 name: '采购订单',
                 system_st: 1,
@@ -504,7 +504,7 @@ export default () => {
               },
               {
                 id: 3,
-                scene: 1,
+                // scene: 1,
                 code: 'node_purchase_storage',
                 name: '采购入库',
                 system_st: 1,
@@ -519,7 +519,7 @@ export default () => {
               },
               {
                 id: 4,
-                scene: 1,
+                // scene: 1,
                 code: 'node_purchase_invoice',
                 name: '采购发票',
                 system_st: 1,
@@ -581,9 +581,9 @@ export default () => {
           column={1}
           labelStyle={{justifyContent: 'flex-start', minWidth: 100}}
         >
-          <Descriptions.Item label="业务场景">
-            {scenesMap.get(info?.scene)}
-          </Descriptions.Item>
+          {/*<Descriptions.Item label="业务场景">*/}
+          {/*  {scenesMap.get(info?.scene)}*/}
+          {/*</Descriptions.Item>*/}
           <Descriptions.Item label="节点编号">
             {info?.code}
           </Descriptions.Item>
@@ -658,17 +658,17 @@ export default () => {
           }
         }}
       >
-        <ProFormSelect
-          width="sm"
-          name="scene"
-          label="业务场景"
-          fieldProps={{
-            labelInValue: true,
-          }}
-          request={async () => scenes}
-          placeholder="请选择场景"
-          rules={[{ required: true, message: '请选择场景!' }]}
-        />
+        {/*<ProFormSelect*/}
+        {/*  width="sm"*/}
+        {/*  name="scene"*/}
+        {/*  label="业务场景"*/}
+        {/*  fieldProps={{*/}
+        {/*    labelInValue: true,*/}
+        {/*  }}*/}
+        {/*  request={async () => scenes}*/}
+        {/*  placeholder="请选择场景"*/}
+        {/*  rules={[{ required: true, message: '请选择场景!' }]}*/}
+        {/*/>*/}
         <ProFormText
           width="sm"
           name="code"
