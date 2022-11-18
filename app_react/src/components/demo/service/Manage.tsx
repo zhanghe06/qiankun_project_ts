@@ -10,7 +10,15 @@ import {
 import type { MenuProps } from 'antd';
 import { Button, Menu, Space, Layout, Row, Col, message, Modal } from 'antd';
 import ProTable, { ActionType, ProColumns } from "@ant-design/pro-table";
-import { DrawerForm, ProFormInstance, ProFormRadio, ProFormSelect, ProFormText } from "@ant-design/pro-form";
+import {
+  DrawerForm,
+  ProForm,
+  ProFormCheckbox,
+  ProFormInstance, ProFormList,
+  ProFormRadio,
+  ProFormSelect,
+  ProFormText
+} from "@ant-design/pro-form";
 const { Header, Content, Sider } = Layout;
 
 export default () => {
@@ -316,6 +324,10 @@ export default () => {
           data_type: number
           name: string
           note: string
+          service_fields: {
+            code: string
+            name: string
+          }[]
           created_at?: string
         }>
           name="recordForm"
@@ -411,6 +423,49 @@ export default () => {
             placeholder="请输入名称"
             rules={[{ required: true, message: '请输入名称!' }]}
           />
+          <ProFormList
+            name="service_fields"
+            label="服务字段"
+            // creatorButtonProps={false}
+            creatorButtonProps={{
+              position: 'bottom',
+            }}
+            initialValue={[
+              {
+                code: '',
+                name: '',
+              },
+            ]}
+            itemContainerRender={(doms) => {
+              return <ProForm.Group>{doms}</ProForm.Group>;
+            }}
+            max={4}
+            {...{
+              labelCol: {span: 4},
+              wrapperCol: {span: 20},
+            }}
+          >
+            <ProFormText
+              width="xs"
+              key="code"
+              name="code"
+              // label="名称"
+              placeholder="字段标识"
+              // disabled={true}
+              rules={[{ required: true, message: '请填写字段标识!' }]}
+            />
+            <ProFormText
+              width="xs"
+              key="name"
+              name="name"
+              // label="名称"
+              placeholder="字段描述"
+              // disabled={true}
+              rules={[{ required: true, message: '请填写字段描述!' }]}
+            />
+
+            {/*<Divider/>*/}
+          </ProFormList>
         </DrawerForm>
       </Content>
     </Layout>

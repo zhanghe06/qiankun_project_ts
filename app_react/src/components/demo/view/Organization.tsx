@@ -396,6 +396,8 @@ export default () => {
                 // creatorButtonProps={{
                 //   position: 'bottom',
                 // }}
+                copyIconProps={false}
+                deleteIconProps={false}
                 initialValue={[
                   {
                     org_branch_name: '成都客服中心',
@@ -479,6 +481,8 @@ export default () => {
                   },
                 ]}
                 creatorButtonProps={false}
+                copyIconProps={false}
+                deleteIconProps={false}
                 // creatorButtonProps={{
                 //   position: 'bottom',
                 // }}
