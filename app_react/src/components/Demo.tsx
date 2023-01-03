@@ -19,6 +19,7 @@ import ViewFlow from './demo/view/Flow';
 import ViewTime from './demo/view/Time';
 import ViewOrganization from './demo/view/Organization';
 import ViewTree from './demo/view/Tree';
+import PortalTree from './demo/portal/Tree';
 // import Cert from './cert/Index';
 // import Strategy from './strategy/Index';
 // import Conf from './conf/Index';
@@ -39,17 +40,17 @@ export default () => {
     <Router basename={(window as any).__POWERED_BY_QIANKUN__ ? '/app/react/' : '/'}>
       <Route path='/' component={() => (
         <Row gutter={16}>
-          <Col span={8}>
+          <Col span={6}>
             <NavLink to="/service">
               <Card hoverable={true} bodyStyle={cardBodyStyle} key="service">服务配置</Card>
             </NavLink>
           </Col>
-          <Col span={8}>
+          <Col span={6}>
             <NavLink to="/business">
               <Card hoverable={true} bodyStyle={cardBodyStyle} key="business">场景配置</Card>
             </NavLink>
           </Col>
-          <Col span={8}>
+          <Col span={6}>
             <NavLink to="/view">
               <Card hoverable={true} bodyStyle={cardBodyStyle} key="view">目录装配</Card>
             </NavLink>
@@ -59,6 +60,11 @@ export default () => {
           {/*    <Card hoverable={true} bodyStyle={cardBodyStyle} key="permission">权限配置</Card>*/}
           {/*  </NavLink>*/}
           {/*</Col>*/}
+          <Col span={6}>
+            <NavLink to="/portal">
+              <Card hoverable={true} bodyStyle={cardBodyStyle} key="portal">用户门户</Card>
+            </NavLink>
+          </Col>
         </Row>
       )}>
       </Route>
@@ -176,6 +182,10 @@ export default () => {
             },
           ]}
         />
+      )}>
+      </Route>
+      <Route path='/portal' component={() => (
+        <PortalTree/>
       )}>
       </Route>
     </Router>

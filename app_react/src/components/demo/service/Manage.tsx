@@ -211,15 +211,15 @@ export default () => {
       ellipsis: true,
     },
     {
-      title: '数据类型',
+      title: '业务事务型服务',
       dataIndex: 'data_type',
       ellipsis: true,
       valueEnum: {
         1: {
-          text: '是主数据',
+          text: '是',
         },
         2: {
-          text: '非主数据',
+          text: '否',
         },
       },
     },
@@ -395,15 +395,15 @@ export default () => {
           <ProFormRadio.Group
             width="sm"
             name="data_type"
-            label="数据类型"
+            label="业务事务型服务"
             initialValue={2}
             options={[
               {
-                label: '是主数据',
+                label: '是',
                 value: 1,
               },
               {
-                label: '非主数据',
+                label: '否',
                 value: 2,
               },
             ]}
